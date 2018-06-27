@@ -1,0 +1,61 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.github.dcendents.android-maven'
+
+// Apply static code analysis configuration
+apply from: './checks.gradle'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
+
+    defaultConfig {
+        minSdkVersion 18
+        targetSdkVersion 27
+        versionCode versionCode
+        versionName "${versionName}"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+
+ext {
+    bintrayRepo = 'adorsys'
+    bintrayName = 'securestorage2library'
+
+    publishedGroupId = 'de.adorsys.android'
+    libraryName = 'securestorage2library'
+    artifact = 'securestorage2library'
+
+    libraryDescription = 'securestorage2library'
+
+    siteUrl = 'https://www.adorsys.de/'
+    gitUrl = 'https://github.com/adorsys/secure-storage2-android.git'
+
+    libraryVersion = "${versionName}"
+
+    developerId = 'andev'
+    developerName = 'Andev Adorsys'
+    developerEmail = 'adorsys.andev@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+apply from: 'https://raw.githubusercontent.com/adorsys/jcenter-distribution/master/installv.gradle'
+apply from: 'https://raw.githubusercontent.com/adorsys/jcenter-distribution/master/bintrayv.gradle'
+repositories {
+    mavenCentral()
+}
