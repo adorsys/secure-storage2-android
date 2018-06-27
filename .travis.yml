@@ -1,12 +1,12 @@
 language: android
-dist: trusty
 sudo: required
+dist: trusty
 jdk: oraclejdk
 
 branches:
   only:
- - master
- - develop
+  - master
+  - develop
 before_cache:
   -rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
   -rm -fr $HOME/.gradle/caches/*/plugin-resolution/
