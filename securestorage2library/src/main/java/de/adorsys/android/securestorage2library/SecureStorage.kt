@@ -3,8 +3,10 @@ package de.adorsys.android.securestorage2library
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.text.TextUtils
-import de.adorsys.android.securestorage2library.SecureStorageException.ExceptionType.CRYPTO_EXCEPTION
-import de.adorsys.android.securestorage2library.SecureStorageProvider.Companion.context
+import de.adorsys.android.securestorage2library.internal.KeystoreTool
+import de.adorsys.android.securestorage2library.internal.SecureStorageException
+import de.adorsys.android.securestorage2library.internal.SecureStorageException.ExceptionType.CRYPTO_EXCEPTION
+import de.adorsys.android.securestorage2library.internal.SecureStorageProvider.Companion.context
 import java.io.UnsupportedEncodingException
 import java.security.GeneralSecurityException
 
@@ -13,8 +15,7 @@ object SecureStorage {
     private const val KEY_SET_COUNT_POSTFIX = "_count"
 
     @Throws(SecureStorageException::class)
-    fun setValue(key: String,
-                 value: String) {
+    fun setValue(key: String, value: String) {
         if (!KeystoreTool.keysExist()) {
             KeystoreTool.generateKeys()
         }
@@ -38,32 +39,27 @@ object SecureStorage {
     }
 
     @Throws(SecureStorageException::class)
-    fun setValue(key: String,
-                 value: Boolean) {
+    fun setValue(key: String, value: Boolean) {
         setValue(key, value.toString())
     }
 
     @Throws(SecureStorageException::class)
-    fun setValue(key: String,
-                 value: Float) {
+    fun setValue(key: String, value: Float) {
         setValue(key, value.toString())
     }
 
     @Throws(SecureStorageException::class)
-    fun setValue(key: String,
-                 value: Long) {
+    fun setValue(key: String, value: Long) {
         setValue(key, value.toString())
     }
 
     @Throws(SecureStorageException::class)
-    fun setValue(key: String,
-                 value: Int) {
+    fun setValue(key: String, value: Int) {
         setValue(key, value.toString())
     }
 
     @Throws(SecureStorageException::class)
-    fun setValue(key: String,
-                 value: Set<String>) {
+    fun setValue(key: String, value: Set<String>) {
         setValue(key + KEY_SET_COUNT_POSTFIX, value.size.toString())
 
         for ((i, s) in value.withIndex()) {
@@ -88,31 +84,25 @@ object SecureStorage {
             e.printStackTrace()
             defValue
         }
-
     }
 
-    fun getBooleanValue(key: String,
-                        defValue: Boolean): Boolean {
+    fun getBooleanValue(key: String, defValue: Boolean): Boolean {
         return java.lang.Boolean.parseBoolean(getStringValue(key, defValue.toString()))
     }
 
-    fun getFloatValue(key: String,
-                      defValue: Float): Float {
+    fun getFloatValue(key: String, defValue: Float): Float {
         return java.lang.Float.parseFloat(getStringValue(key, defValue.toString()))
     }
 
-    fun getLongValue(key: String,
-                     defValue: Long): Long {
+    fun getLongValue(key: String, defValue: Long): Long {
         return java.lang.Long.parseLong(getStringValue(key, defValue.toString()))
     }
 
-    fun getIntValue(key: String,
-                    defValue: Int): Int {
+    fun getIntValue(key: String, defValue: Int): Int {
         return Integer.parseInt(getStringValue(key, defValue.toString()))
     }
 
-    fun getStringSetValue(key: String,
-                          defValue: Set<String>): Set<String> {
+    fun getStringSetValue(key: String, defValue: Set<String>): Set<String> {
         val size = getIntValue(key + KEY_SET_COUNT_POSTFIX, -1)
 
         if (size == -1) {
@@ -145,22 +135,19 @@ object SecureStorage {
         clearAllSecureValues()
     }
 
-    fun registerOnSharedPreferenceChangeListener(
-            listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+    fun registerOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         val preferences = context.get()
                 ?.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, MODE_PRIVATE)
         preferences!!.registerOnSharedPreferenceChangeListener(listener)
     }
 
-    fun unregisterOnSharedPreferenceChangeListener(
-            listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+    fun unregisterOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         val preferences = context.get()
                 ?.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, MODE_PRIVATE)
         preferences!!.unregisterOnSharedPreferenceChangeListener(listener)
     }
 
-    private fun setSecureValue(key: String,
-                       value: String) {
+    private fun setSecureValue(key: String, value: String) {
         val preferences = context.get()
                 ?.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, MODE_PRIVATE)
         preferences!!.edit().putString(key, value).apply()

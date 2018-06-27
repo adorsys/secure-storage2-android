@@ -1,4 +1,4 @@
-package de.adorsys.android.securestorage2library
+package de.adorsys.android.securestorage2library.internal
 
 class SecureStorageException(detailMessage: String, cause: Throwable?, val type: ExceptionType) : Exception(detailMessage, cause) {
 
