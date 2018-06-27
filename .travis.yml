@@ -32,7 +32,6 @@ android:
  - android-sdk-preview-license-.+
  - android-sdk-license-.+
  - google-gdk-license-.+
-
 script:
   - ./code-check.sh
 after_success:
