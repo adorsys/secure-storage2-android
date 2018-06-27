@@ -1,4 +1,4 @@
-package de.adorsys.android.securestorage2library
+package de.adorsys.android.securestorage2library.internal
 
 import android.content.ContentProvider
 import android.content.ContentValues
@@ -11,14 +11,14 @@ import java.lang.ref.WeakReference
 class SecureStorageProvider : ContentProvider() {
 
     override fun onCreate(): Boolean {
-        SecureStorageProvider.context = WeakReference(context)
+        Companion.context = WeakReference(context)
         // Fixes for the output of the default PRNG having low entropy on API 18
         PRNGFixes.apply()
         return true
     }
 
-    override fun query(uri: Uri, projection: Array<String>?, selection: String?, //NOPMD
-                       selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
+    // NOPMD
+    override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
         return null
     }
 
@@ -30,13 +30,11 @@ class SecureStorageProvider : ContentProvider() {
         return null
     }
 
-    override fun delete(uri: Uri, selection: String?,
-                        selectionArgs: Array<String>?): Int {
+    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
         return 0
     }
 
-    override fun update(uri: Uri, values: ContentValues?, selection: String?,
-                        selectionArgs: Array<String>?): Int {
+    override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?): Int {
         return 0
     }
 

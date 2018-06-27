@@ -1,4 +1,6 @@
-package de.adorsys.android.securestorage2library
+@file:Suppress("DEPRECATION")
+
+package de.adorsys.android.securestorage2library.internal
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,19 +14,28 @@ import android.util.Base64.DEFAULT
 import android.util.Base64.decode
 import android.util.Log
 import android.view.View.LAYOUT_DIRECTION_RTL
+import de.adorsys.android.securestorage2library.BuildConfig
+import de.adorsys.android.securestorage2library.R
 import de.adorsys.android.securestorage2library.SecureStorage.KEY_SHARED_PREFERENCES_NAME
 import de.adorsys.android.securestorage2library.SecureStorage.removeValue
-import de.adorsys.android.securestorage2library.SecureStorageException.ExceptionType.INTERNAL_LIBRARY_EXCEPTION
-import de.adorsys.android.securestorage2library.SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
-import de.adorsys.android.securestorage2library.SecureStorageProvider.Companion.context
+import de.adorsys.android.securestorage2library.internal.SecureStorageException.ExceptionType.INTERNAL_LIBRARY_EXCEPTION
+import de.adorsys.android.securestorage2library.internal.SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
+import de.adorsys.android.securestorage2library.internal.SecureStorageProvider.Companion.context
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.math.BigInteger
 import java.nio.charset.Charset.forName
-import java.security.*
+import java.security.KeyPairGenerator
+import java.security.KeyStore
+import java.security.KeyStoreException
+import java.security.NoSuchAlgorithmException
+import java.security.PrivateKey
+import java.security.PublicKey
 import java.security.cert.CertificateException
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
+import java.util.UUID
 import javax.crypto.Cipher
 import javax.crypto.CipherInputStream
 import javax.crypto.CipherOutputStream
@@ -198,7 +209,6 @@ internal object KeystoreTool {
 
             val values = outputStream.toByteArray()
             encryptedValue = Base64.encodeToString(values, DEFAULT)
-
         } catch (e: Exception) {
             throw SecureStorageException(e.message!!, e, KEYSTORE_EXCEPTION)
         }
@@ -212,8 +222,8 @@ internal object KeystoreTool {
         val encryptedMessage = preferences.getString(key, null)
 
         try {
-            val output = KeystoreTool.getCipher()
-            output.init(Cipher.DECRYPT_MODE, KeystoreTool.getAsymmetricPrivateKey())
+            val output = getCipher()
+            output.init(Cipher.DECRYPT_MODE, getAsymmetricPrivateKey())
 
             val cipherInputStream = CipherInputStream(
                     ByteArrayInputStream(decode(encryptedMessage, DEFAULT)), output)
@@ -244,7 +254,6 @@ internal object KeystoreTool {
             } catch (e: KeyStoreException) {
                 throw SecureStorageException(e.message!!, e, KEYSTORE_EXCEPTION)
             }
-
         } else if (BuildConfig.DEBUG) {
             Log.e(KeystoreTool::class.java.name,
                     context.get()!!.getString(R.string.message_keypair_does_not_exist))
@@ -270,7 +279,7 @@ internal object KeystoreTool {
             try {
                 setAsymmetricValue(KEY_RANDOMIZED_DEVICE_ID, randomizedId)
             } catch (e: Exception) {
-                //setKeystoreCrashHappened();
+                // setKeystoreCrashHappened();
             }
         }
 
@@ -279,7 +288,7 @@ internal object KeystoreTool {
             try {
                 setAsymmetricValue(KEY_RANDOM_SECURE_PASSPHRASE, SecurePassphraseUtil.generateRandomString())
             } catch (e: Exception) {
-                //setKeystoreCrashHappened();
+                // setKeystoreCrashHappened();
             }
         }
     }

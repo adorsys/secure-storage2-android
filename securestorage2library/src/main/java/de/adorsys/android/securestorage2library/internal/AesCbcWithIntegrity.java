@@ -22,7 +22,7 @@
  * Created by Isaac Potoczny-Jones on 11/12/14.
  */
 
-package de.adorsys.android.securestorage2library;
+package de.adorsys.android.securestorage2library.internal;
 
 import android.util.Base64;
 
@@ -125,7 +125,7 @@ final class AesCbcWithIntegrity {
         SecretKey confidentialityKey = keyGen.generateKey();
 
         //Now make the HMAC key
-        byte[] integrityKeyBytes = randomBytes(HMAC_KEY_LENGTH_BITS / 8);//to get bytes
+        byte[] integrityKeyBytes = randomBytes(HMAC_KEY_LENGTH_BITS / 8); //to get bytes
         SecretKey integrityKey = new SecretKeySpec(integrityKeyBytes, HMAC_ALGORITHM);
 
         return new SecretKeys(confidentialityKey, integrityKey);
@@ -352,9 +352,9 @@ final class AesCbcWithIntegrity {
      */
     private static byte[] generateMac(byte[] byteCipherText, SecretKey integrityKey) throws NoSuchAlgorithmException, InvalidKeyException {
         //Now compute the mac for later integrity checking
-        Mac sha256_HMAC = Mac.getInstance(HMAC_ALGORITHM);
-        sha256_HMAC.init(integrityKey);
-        return sha256_HMAC.doFinal(byteCipherText);
+        Mac sha256HMAC = Mac.getInstance(HMAC_ALGORITHM);
+        sha256HMAC.init(integrityKey);
+        return sha256HMAC.doFinal(byteCipherText);
     }
 
     /**
@@ -373,8 +373,8 @@ final class AesCbcWithIntegrity {
          * @param integrityKeyIn       the HMAC key
          */
         SecretKeys(SecretKey confidentialityKeyIn, SecretKey integrityKeyIn) {
-            setConfidentialityKey(confidentialityKeyIn);
-            setIntegrityKey(integrityKeyIn);
+            setConfidentialityKey(confidentialityKeyIn); //NOPMD
+            setIntegrityKey(integrityKeyIn); //NOPMD
         }
 
         SecretKey getConfidentialityKey() {
@@ -415,12 +415,15 @@ final class AesCbcWithIntegrity {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
+            if (this == obj) {
                 return true;
-            if (obj == null)
+            }
+            if (obj == null) {
                 return false;
-            if (getClass() != obj.getClass())
+            }
+            if (getClass() != obj.getClass()) {
                 return false;
+            }
             SecretKeys other = (SecretKeys) obj;
             return integrityKey.equals(other.integrityKey) && confidentialityKey.equals(other.confidentialityKey);
         }
@@ -541,12 +544,15 @@ final class AesCbcWithIntegrity {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
+            if (this == obj) {
                 return true;
-            if (obj == null)
+            }
+            if (obj == null) {
                 return false;
-            if (getClass() != obj.getClass())
+            }
+            if (getClass() != obj.getClass()) {
                 return false;
+            }
             CipherTextIvMac other = (CipherTextIvMac) obj;
             return Arrays.equals(cipherText, other.cipherText) && Arrays.equals(iv, other.iv) && Arrays.equals(mac, other.mac);
         }

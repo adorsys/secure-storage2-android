@@ -24,7 +24,7 @@
     static <methods>;
 }
 
--keep class de.adorsys.android.securestorage2library.SecureStorageException** {
+-keep class de.adorsys.android.securestorage2library.internal.SecureStorageException** {
     **[] $VALUES;
     public *;
 }

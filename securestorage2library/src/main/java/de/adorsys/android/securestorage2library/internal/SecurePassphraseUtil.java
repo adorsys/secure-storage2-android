@@ -1,4 +1,4 @@
-package de.adorsys.android.securestorage2library;
+package de.adorsys.android.securestorage2library.internal;
 
 import android.support.annotation.NonNull;
 
@@ -26,27 +26,27 @@ final class SecurePassphraseUtil {
         String numericGroup = "numeric";
         String specialGroup = "special";
 
-        int MIN_LOWER_CASE_COUNT = 10;
-        int MIN_UPPER_CASE_COUNT = 10;
-        int MIN_NUMBER_COUNT = 10;
-        int MIN_SPECIAL_COUNT = 20;
+        int minLowerCaseCount = 10;
+        int minUpperCaseCount = 10;
+        int minNumberCount = 10;
+        int minSpecialCount = 20;
 
-        int MIN_LENGTH = 64;
-        int MAX_LENGTH = 128;
+        int minLength = 64;
+        int maxLength = 128;
 
         Map<String, Integer> charGroupsUsed = new HashMap<>();
-        charGroupsUsed.put(lowerCaseGroup, MIN_LOWER_CASE_COUNT);
-        charGroupsUsed.put(upperCaseGroup, MIN_UPPER_CASE_COUNT);
-        charGroupsUsed.put(numericGroup, MIN_NUMBER_COUNT);
-        charGroupsUsed.put(specialGroup, MIN_SPECIAL_COUNT);
+        charGroupsUsed.put(lowerCaseGroup, minLowerCaseCount);
+        charGroupsUsed.put(upperCaseGroup, minUpperCaseCount);
+        charGroupsUsed.put(numericGroup, minNumberCount);
+        charGroupsUsed.put(specialGroup, minSpecialCount);
 
         SecureRandom random = new SecureRandom();
 
         // Allocate appropriate memory for the password.
-        int randomIndex = random.nextInt((MAX_LENGTH - MIN_LENGTH) + 1) + MIN_LENGTH;
+        int randomIndex = random.nextInt((maxLength - minLength) + 1) + minLength;
         randomString = new char[randomIndex];
 
-        int requiredCharactersLeft = MIN_LOWER_CASE_COUNT + MIN_UPPER_CASE_COUNT + MIN_NUMBER_COUNT + MIN_SPECIAL_COUNT;
+        int requiredCharactersLeft = minLowerCaseCount + minUpperCaseCount + minNumberCount + minSpecialCount;
 
         // Build the password.
         for (int i = 0; i < randomString.length; i++) {
@@ -56,8 +56,8 @@ final class SecurePassphraseUtil {
             if (requiredCharactersLeft < randomString.length - i) {
                 // choose from any group at random
                 selectableChars = lowerCaseChars + upperCaseChars + numericChard + specialChars;
-            } else // we are out of wiggle room, choose from a random group that still needs to have a minimum required.
-            {
+            } else {
+                // we are out of wiggle room, choose from a random group that still needs to have a minimum required.
                 // choose only from a group that we need to satisfy a minimum for.
                 for (Map.Entry<String, Integer> charGroup : charGroupsUsed.entrySet()) {
                     if (charGroup.getValue() > 0) {
@@ -75,7 +75,7 @@ final class SecurePassphraseUtil {
             }
 
             // Now that the string is built, get the next random character.
-            randomIndex = random.nextInt((selectableChars.length()) - 1);
+            randomIndex = random.nextInt(selectableChars.length() - 1);
             char nextChar = selectableChars.charAt(randomIndex);
 
             // Tac it onto our password.
