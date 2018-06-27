@@ -22,7 +22,7 @@ android {
         }
     }
     lintOptions {
-        disable 'UnusedResources'
+        disable 'UnusedResources', 'GoogleAppIndexingWarning'
     }
 }
 
