@@ -1,0 +1,14 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="de.adorsys.android.securestorage2library">
+
+    <application
+        android:allowBackup="false"
+        android:label="@string/app_name">
+        <provider
+            android:name=".internal.SecureStorageProvider"
+            android:authorities="${applicationId}.de.adorsys.android.securestorage2library"
+            android:enabled="true"
+            android:exported="false" />
+    </application>
+
+</manifest>
