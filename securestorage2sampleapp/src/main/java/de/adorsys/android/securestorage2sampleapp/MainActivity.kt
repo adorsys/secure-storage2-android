@@ -12,21 +12,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val startMessage = "TEST"
-
-        Log.d("LOGTAG1", " " + startMessage)
-
-        SecurePreferences.setValue("TAG", startMessage)
-
-        Log.d("LOGTAG", " ENCRYPTED 1")
-
-        val try1 = SecurePreferences.getStringValue("TAG", "WRONG")
-        if (try1 != null) {
-            SecureStorage.setValue("TAG", try1)
-        }
-
-        Log.d("LOGTAG", " ENCRYPTED 2")
-
-        Log.d("LOGTAG2", " " + SecureStorage.getStringValue("TAG", "WRONG"))
+        //TODO Implement Sample App Logic
     }
 }

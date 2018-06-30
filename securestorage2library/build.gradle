@@ -42,13 +42,13 @@ dependencies {
 
 ext {
     bintrayRepo = 'adorsys'
-    bintrayName = 'securestorage2library'
+    bintrayName = 'securestorage2'
 
     publishedGroupId = 'de.adorsys.android'
-    libraryName = 'securestorage2library'
-    artifact = 'securestorage2library'
+    libraryName = 'securestorage2'
+    artifact = 'securestorage2'
 
-    libraryDescription = 'securestorage2library'
+    libraryDescription = 'securestorage2'
 
     siteUrl = 'https://www.adorsys.de/'
     gitUrl = 'https://github.com/adorsys/secure-storage2-android.git'

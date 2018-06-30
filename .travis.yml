@@ -33,5 +33,5 @@ android:
   - google-gdk-license-.+
 script:
   - ./code-check.sh
-#after_success:
-#  - ./bintray-upload.sh
+after_success:
+  - ./bintray-upload.sh
