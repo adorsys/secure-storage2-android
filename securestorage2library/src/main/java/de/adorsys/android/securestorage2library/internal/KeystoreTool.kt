@@ -5,6 +5,7 @@ package de.adorsys.android.securestorage2library.internal
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.os.Build
 import android.provider.Settings.Secure.ANDROID_ID
 import android.provider.Settings.Secure.getString
 import android.security.KeyPairGeneratorSpec
@@ -137,22 +138,36 @@ internal object KeystoreTool {
 
     @Throws(SecureStorageException::class)
     private fun getAsymmetricPrivateKey(): PrivateKey {
-        try {
-            val privateKeyEntry = getKeyStoreInstance()
-                    .getEntry(KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
-            return privateKeyEntry.privateKey
+        val privateKey: PrivateKey
+        privateKey = try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                // only for P and newer versions
+                getKeyStoreInstance().getKey(KEY_ALIAS, null) as PrivateKey
+            } else {
+                val privateKeyEntry =
+                        getKeyStoreInstance().getEntry(KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
+                privateKeyEntry.privateKey
+            }
+
         } catch (e: Exception) {
             throw SecureStorageException(e.message!!, e, KEYSTORE_EXCEPTION)
         }
+
+        return privateKey
     }
 
     @Throws(SecureStorageException::class)
     private fun getAsymmetricPublicKey(): PublicKey {
-        try {
+        val publicKey: PublicKey
+        publicKey = try {
             if (asymmetricKeyPairExists()) {
-                val privateKeyEntry = getKeyStoreInstance()
-                        .getEntry(KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
-                return privateKeyEntry.certificate.publicKey
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    // only for P and newer versions
+                    getKeyStoreInstance().getCertificate(KEY_ALIAS).publicKey
+                } else {
+                    val privateKeyEntry = getKeyStoreInstance().getEntry(KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
+                    privateKeyEntry.certificate.publicKey
+                }
             } else {
                 if (BuildConfig.DEBUG) {
                     Log.e(KeystoreTool::class.java.name,
@@ -165,6 +180,8 @@ internal object KeystoreTool {
         } catch (e: Exception) {
             throw SecureStorageException(e.message!!, e, KEYSTORE_EXCEPTION)
         }
+
+        return publicKey
     }
 
     @Throws(SecureStorageException::class)
@@ -178,7 +195,7 @@ internal object KeystoreTool {
             val end = Calendar.getInstance()
             end.add(Calendar.YEAR, 99)
 
-            @Suppress("DEPRECATION")
+            @Suppress("DEPRECATION", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
             val spec = KeyPairGeneratorSpec.Builder(context.get())
                     .setAlias(KEY_ALIAS)
                     .setSubject(X500Principal(KEY_X500PRINCIPAL))
