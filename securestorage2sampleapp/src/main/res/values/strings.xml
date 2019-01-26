@@ -1,3 +1,47 @@
 <resources>
     <string name="app_name">SecureStorage2</string>
+    <string name="text_to_encrypt">Text to Encrypt</string>
+    <string name="button_encrypt">Encrypt</string>
+    <string name="button_encrypt_old_solution">Encrypt with Old Solution</string>
+    <string name="button_generate_encrypt">Generate Key and Start Encryption</string>
+    <string name="button_clear_field">Clear</string>
+
+    <string name="message_encrypted_decrypted"><![CDATA[Message Before Encryption: <b>%1$s</b><br><br>
+    ...........................<br><br>
+    Encrypting &#8230; SUCCESS<br><br>
+    ...........................<br><br>
+    Decrypting &#8230; SUCCESS<br><br>
+    ...........................<br><br>
+    Message After Decryption: <b>%2$s</b>]]></string>
+
+    <string name="message_encrypted_old_solution"><![CDATA[Message Before Encryption: <b>%1$s</b><br><br>
+    ...........................<br><br>
+    Encrypting with old solution &#8230; SUCCESS<br><br>
+    ...........................<br><br>
+    Decrypting &#8230; SUCCESS<br><br>
+    ...........................<br><br>
+    Message After Decryption with old solution: <b>%2$s</b>]]></string>
+
+    <string name="message_encrypted_by_migration"><![CDATA[Value from old solution: <b>%1$s</b><br><br>
+    ...........................<br><br>
+    Encrypting with new solution &#8230; SUCCESS<br><br>
+    ...........................<br><br>
+    Decrypting with new Solution &#8230; SUCCESS<br><br>
+    ...........................<br><br>
+    Message After Decryption: <b>%2$s</b>
+    ...........................<br><br>
+    Removing value from old solution &#8230; SUCCESS<br><br>
+    ...........................<br><br>
+    Deleting all encryption keys from old solution &#8230; SUCCESS<br><br>]]></string>
+
+    <!-- error strings -->
+    <string name="error_not_supported">This device is not supported by the native Android keystore.</string>
+    <string name="error_fatal">The key store threw an internal error which means that despite all other criteria match you cannot use the key store on this device.</string>
+    <string name="error_encryption">An error has happened when trying to encrypt or decrypt a value.</string>
+    <string name="error_library">Blame it all on us! Create an issue on GitHub.</string>
+
+    <string name="clear_all">Clear all</string>
+    <string name="info">Info</string>
+    <string name="migrate">Migrate</string>
+    <string name="button_migrate">Migrate</string>
 </resources>
