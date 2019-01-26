@@ -22,7 +22,7 @@
 package de.adorsys.android.securestorage2sampleapp
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import de.adorsys.android.securestorage2library.SecureStorage
 import de.adorsys.android.securestoragelibrary.SecurePreferences

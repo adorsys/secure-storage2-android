@@ -3,8 +3,8 @@ package de.adorsys.android.securestorage2sampleapp
 import android.app.Activity
 import android.content.Context
 import android.os.Build
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
+import androidx.core.content.ContextCompat
 import android.text.Html
 import android.text.Spanned
 import android.view.View
@@ -34,6 +34,6 @@ fun showSnackbar(rootView: View, message: String, durationShort: Boolean) {
 
     val snackbar = Snackbar.make(rootView, message, duration)
     snackbar.view.setBackgroundColor(ContextCompat.getColor(rootView.context, R.color.colorPrimary))
-    snackbar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text).setTextColor(ContextCompat.getColor(rootView.context, android.R.color.white))
+    snackbar.view.findViewById<TextView>(R.id.snackbar_text).setTextColor(ContextCompat.getColor(rootView.context, android.R.color.white))
     snackbar.show()
 }

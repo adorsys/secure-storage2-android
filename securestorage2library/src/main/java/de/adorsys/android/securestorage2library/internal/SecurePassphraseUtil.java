@@ -1,6 +1,6 @@
 package de.adorsys.android.securestorage2library.internal;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.security.SecureRandom;
 import java.util.HashMap;
