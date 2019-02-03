@@ -1,4 +1,4 @@
-package de.adorsys.android.securestorage2sampleapp
+package de.adorsys.android.securestorage2sampleapp.ui
 
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +13,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
+import de.adorsys.android.securestorage2sampleapp.MainActivity
+import de.adorsys.android.securestorage2sampleapp.R
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.`is`
