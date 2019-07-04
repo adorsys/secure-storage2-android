@@ -1,24 +1,49 @@
 package de.adorsys.android.securestorage2
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.support.annotation.RequiresApi
 import de.adorsys.android.securestorage2.internal.KeyStoreTool
 import de.adorsys.android.securestorage2.internal.SecureStorageException
-import java.lang.Boolean.*
+import java.lang.Boolean.parseBoolean
 import java.lang.Float.parseFloat
 import java.lang.Integer.parseInt
 import java.lang.Long.parseLong
 
+@SuppressLint("CommitPrefEdits")
 object SecureStorage {
 
     @Throws(SecureStorageException::class)
+    fun initSecureStorageKeys(context: Context) {
+        KeyStoreTool.setInstallApiVersionFlag(context)
+
+        if (!KeyStoreTool.keyExists(context)) {
+            KeyStoreTool.initKeys(context)
+        }
+    }
+
+    @Throws(SecureStorageException::class)
+    fun deviceHasSecureHardwareSupport(context: Context): Boolean {
+        return KeyStoreTool.deviceHasSecureHardwareSupport(context)
+    }
+
+    @RequiresApi(23)
+    @Throws(SecureStorageException::class)
+    fun isKeyInsideSecureHardware() {
+        KeyStoreTool.isKeyInsideSecureHardware()
+    }
+
+    @Throws(SecureStorageException::class)
     fun putString(context: Context, key: String, value: String) {
-        if (!KeyStoreTool.keyExists()) {
-            KeyStoreTool.generateKey()
+        checkAppCanUseLibrary()
+
+        if (!KeyStoreTool.keyExists(context)) {
+            KeyStoreTool.generateKey(context)
         }
 
-        val encryptedValue = KeyStoreTool.encryptValue(value)
+        val encryptedValue = KeyStoreTool.encryptValue(context, key, value)
 
         putSecureValue(context, key, encryptedValue)
     }
@@ -43,10 +68,17 @@ object SecureStorage {
         putString(context, key, value.toString())
     }
 
+    @Throws(SecureStorageException::class)
     fun getString(context: Context, key: String, defaultValue: String): String {
+        checkAppCanUseLibrary()
+
         val encryptedValue = getSecureValue(context, key)
 
-        val decryptedValue = KeyStoreTool.decryptValue(encryptedValue)
+        if (encryptedValue.isNullOrBlank()) {
+            return defaultValue
+        }
+
+        val decryptedValue = KeyStoreTool.decryptValue(context, key, encryptedValue)
 
         return if (decryptedValue.isNullOrBlank()) {
             defaultValue
@@ -71,63 +103,90 @@ object SecureStorage {
         return parseInt(getString(context, key, defaultValue.toString()))
     }
 
+    @Throws(SecureStorageException::class)
     fun contains(context: Context, key: String): Boolean {
-        val preferences =
-            context.getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, MODE_PRIVATE)
-        return preferences.contains(key)
+        checkAppCanUseLibrary()
+
+        return getSharedPreferencesInstance(context).contains(key)
     }
 
+    @Throws(SecureStorageException::class)
     fun remove(context: Context, key: String) {
+        checkAppCanUseLibrary()
+
         removeSecureValue(context, key)
     }
 
     @Throws(SecureStorageException::class)
     fun clearAllValues(context: Context) {
-        if (KeyStoreTool.keyExists()) {
-            KeyStoreTool.deleteKey()
+        checkAppCanUseLibrary()
+
+        if (KeyStoreTool.keyExists(context)) {
+            KeyStoreTool.deleteKey(context)
         }
         clearAllSecureValues(context)
     }
 
+    @Throws(SecureStorageException::class)
     fun registerOnSecureStorageChangeListener(
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener
     ) {
-        val preferences = context
-            .getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, MODE_PRIVATE)
-        preferences.registerOnSharedPreferenceChangeListener(listener)
+        checkAppCanUseLibrary()
+
+        getSharedPreferencesInstance(context).registerOnSharedPreferenceChangeListener(listener)
     }
 
+    @Throws(SecureStorageException::class)
     fun unregisterOnSecureStorageChangeListener(
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener
     ) {
-        val preferences = context
-            .getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, MODE_PRIVATE)
-        preferences.unregisterOnSharedPreferenceChangeListener(listener)
+        checkAppCanUseLibrary()
+
+        getSharedPreferencesInstance(context).unregisterOnSharedPreferenceChangeListener(listener)
+    }
+
+    internal fun getSharedPreferencesInstance(context: Context): SharedPreferences {
+        return context.getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, MODE_PRIVATE)
     }
 
     private fun putSecureValue(context: Context, key: String, value: String) {
-        val preferences = context
-            .getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, MODE_PRIVATE)
-        preferences.edit().putString(key, value).apply()
+        getSharedPreferencesInstance(context).edit().putString(key, value)
+            .execute(SecureStorageConfig.INSTANCE.ASYNC_OPERATION)
     }
 
     private fun getSecureValue(context: Context, key: String): String? {
-        val preferences = context
-            .getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, MODE_PRIVATE)
-        return preferences.getString(key, null)
+        return getSharedPreferencesInstance(context).getString(key, null)
     }
 
     private fun removeSecureValue(context: Context, key: String) {
-        val preferences = context
-            .getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, MODE_PRIVATE)
-        preferences.edit().remove(key).apply()
+        getSharedPreferencesInstance(context).edit().remove(key).execute(SecureStorageConfig.INSTANCE.ASYNC_OPERATION)
     }
 
     private fun clearAllSecureValues(context: Context) {
-        val preferences =
-            context.getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, MODE_PRIVATE)
-        preferences.edit().clear().apply()
+        getSharedPreferencesInstance(context).edit().clear().execute(SecureStorageConfig.INSTANCE.ASYNC_OPERATION)
+    }
+
+    @Throws(SecureStorageException::class)
+    private fun checkAppCanUseLibrary() {
+        if (!SecureStorageConfig.INSTANCE.CAN_USE_LIBRARY) {
+            throw SecureStorageException(
+                "Cannot use SecureStorage2 on this device because it does not have hardware support.",
+                null,
+                SecureStorageException.ExceptionType.KEYSTORE_NOT_SUPPORTED_EXCEPTION
+            )
+        }
+    }
+}
+
+//================================================================================
+// SecureStorage Extension Function
+//================================================================================
+
+internal fun SharedPreferences.Editor.execute(async: Boolean) {
+    when {
+        async -> apply()
+        else -> commit()
     }
 }
