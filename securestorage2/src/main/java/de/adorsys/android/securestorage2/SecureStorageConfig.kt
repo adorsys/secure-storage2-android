@@ -19,29 +19,29 @@ package de.adorsys.android.securestorage2
 import android.content.Context
 import de.adorsys.android.securestorage2.internal.KeyStoreTool
 
-// this is how a x500principal must look:
-//    "CN=App Name, O=Company Name, C=Country"
-
+@Suppress("PropertyName")
 enum class SecureStorageConfig {
     INSTANCE;
 
     internal lateinit var SHARED_PREFERENCES_NAME: String
     internal lateinit var ENCRYPTION_KEY_ALIAS: String
     internal lateinit var X500PRINCIPAL: String
-    internal var CAN_USE_LIBRARY = false
-    internal var ASYNC_OPERATION = false
+    internal var EXPLICITLY_USE_SECURE_HARDWARE = false
+    internal var CAN_USE_LIBRARY = true
+    internal var ASYNC_OPERATION = true
 
     fun initializeSecureStorageConfig(
         context: Context,
-        encryptionKeyAlias: String,
-        x500Principal: String,
-        useOnlyWithHardwareSupport: Boolean,
-        workWithDataAsynchronously: Boolean
+        encryptionKeyAlias: String? = null,
+        x500Principal: String? = null,
+        useOnlyWithHardwareSupport: Boolean = false,
+        workWithDataAsynchronously: Boolean = true
     ) {
         SHARED_PREFERENCES_NAME = context.packageName + ".SecureStorage2"
-        ENCRYPTION_KEY_ALIAS = encryptionKeyAlias
-        X500PRINCIPAL = x500Principal
+        ENCRYPTION_KEY_ALIAS = encryptionKeyAlias ?: "SecureStorage2Key"
+        X500PRINCIPAL = x500Principal ?: "CN=App Name, O=Organization Name, C=Country"
         ASYNC_OPERATION = workWithDataAsynchronously
+        EXPLICITLY_USE_SECURE_HARDWARE = useOnlyWithHardwareSupport
 
         CAN_USE_LIBRARY = if (useOnlyWithHardwareSupport) {
             KeyStoreTool.deviceHasSecureHardwareSupport(context)
