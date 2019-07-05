@@ -97,6 +97,8 @@ open class SecureStorage2Test {
             .perform(click())
 
         Log.d("SecureStorage2Test Get Data End Time", System.currentTimeMillis().toString())
+
+        SecureStorage.clearAllValues(activityRule.activity.applicationContext)
     }
 
     @Test
@@ -108,6 +110,8 @@ open class SecureStorage2Test {
         SecureStorage.putString(context, KEY, VALUE)
 
         assertTrue(SecureStorage.contains(context, KEY))
+
+        SecureStorage.clearAllValues(activityRule.activity.applicationContext)
     }
 
     @Test
@@ -119,6 +123,8 @@ open class SecureStorage2Test {
         SecureStorage.putString(context, KEY, VALUE)
 
         assertEquals(VALUE, SecureStorage.getString(context, KEY, "FAILED"))
+
+        SecureStorage.clearAllValues(activityRule.activity.applicationContext)
     }
 
     @Test
@@ -132,6 +138,8 @@ open class SecureStorage2Test {
         SecureStorage.remove(context, KEY)
 
         assertFalse(SecureStorage.contains(context, KEY))
+
+        SecureStorage.clearAllValues(activityRule.activity.applicationContext)
     }
 
     companion object {
