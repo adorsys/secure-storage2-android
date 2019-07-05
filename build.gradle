@@ -26,7 +26,10 @@ allprojects {
     repositories {
         google()
         jcenter()
+    }
 
+    tasks.withType(Javadoc).all {
+        enabled = false
     }
 }
 
