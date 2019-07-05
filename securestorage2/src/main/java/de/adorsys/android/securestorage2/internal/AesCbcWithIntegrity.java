@@ -77,6 +77,7 @@ final class AesCbcWithIntegrity {
      * @param keys The combined aes and hmac keys
      * @return a base 64 encoded AES string and hmac key as base64(aesKey) : base64(hmacKey)
      */
+    @SuppressWarnings("unused")
     static String keyString(SecretKeys keys) {
         return keys.toString();
     }
@@ -88,6 +89,7 @@ final class AesCbcWithIntegrity {
      * @param keysStr a base64 encoded AES key / hmac key as base64(aesKey) : base64(hmacKey).
      * @return an AES and HMAC key set suitable for other functions.
      */
+    @SuppressWarnings("unused")
     static SecretKeys keys(String keysStr) throws InvalidKeyException {
         String[] keysArr = keysStr.split(":");
 
@@ -172,7 +174,7 @@ final class AesCbcWithIntegrity {
      * @return The AES and HMAC keys.
      * @throws GeneralSecurityException
      */
-    @SuppressWarnings("JavaDoc")
+    @SuppressWarnings({"JavaDoc", "unused"})
     static SecretKeys generateKeyFromPassword(String password, String salt) throws GeneralSecurityException {
         return generateKeyFromPassword(password, Base64.decode(salt, BASE64_FLAGS));
     }
@@ -182,6 +184,7 @@ final class AesCbcWithIntegrity {
      *
      * @return The random salt suitable for generateKeyFromPassword.
      */
+    @SuppressWarnings("unused")
     static byte[] generateSalt() {
         return randomBytes(PBE_SALT_LENGTH_BITS);
     }
@@ -193,7 +196,7 @@ final class AesCbcWithIntegrity {
      * @param salt
      * @return a base 64 encoded salt string suitable to pass into generateKeyFromPassword.
      */
-    @SuppressWarnings("JavaDoc")
+    @SuppressWarnings({"JavaDoc", "unused"})
     static String saltString(byte[] salt) {
         return Base64.encodeToString(salt, BASE64_FLAGS);
     }
@@ -203,9 +206,8 @@ final class AesCbcWithIntegrity {
      * Creates a random Initialization Vector (IV) of IV_LENGTH_BYTES.
      *
      * @return The byte array of this IV
-     * @throws GeneralSecurityException if a suitable RNG is not available
      */
-    private static byte[] generateIv() throws GeneralSecurityException {
+    private static byte[] generateIv() {
         return randomBytes(IV_LENGTH_BYTES);
     }
 
@@ -297,6 +299,7 @@ final class AesCbcWithIntegrity {
      * @throws GeneralSecurityException     if AES is not implemented on this system
      * @throws UnsupportedEncodingException if the encoding is unsupported
      */
+    @SuppressWarnings("SameParameterValue")
     private static String decryptString(CipherTextIvMac civ, SecretKeys secretKeys, String encoding)
             throws UnsupportedEncodingException, GeneralSecurityException {
         return new String(decrypt(civ, secretKeys), encoding);

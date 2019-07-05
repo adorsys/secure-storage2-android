@@ -50,6 +50,10 @@ internal object KeyStoreToolApi21 {
         return rsaKeyPairExists(keyStoreInstance) && aesKeyExists(context)
     }
 
+    internal fun generateKey(context: Context) {
+        generateRsaKey(context)
+    }
+
     @Throws(SecureStorageException::class)
     internal fun deleteKey(context: Context, keyStoreInstance: KeyStore) {
         // Delete Symmetric Key from SecureStorage
@@ -71,6 +75,37 @@ internal object KeyStoreToolApi21 {
         }
     }
 
+    internal fun encryptValue(
+        context: Context,
+        keyStoreInstance: KeyStore,
+        cipher: Cipher,
+        key: String,
+        value: String
+    ): String {
+        generateAesKey(context, keyStoreInstance, cipher, key)
+
+        val aesKey = getAesKey(context, keyStoreInstance, cipher, key)
+        return AesCbcWithIntegrity.encrypt(value, aesKey).toString()
+    }
+
+    internal fun decryptValue(
+        context: Context,
+        keyStoreInstance: KeyStore,
+        cipher: Cipher,
+        key: String,
+        value: String
+    ): String {
+        val aesKey = getAesKey(context, keyStoreInstance, cipher, key)
+        return AesCbcWithIntegrity.decryptString(
+            AesCbcWithIntegrity.CipherTextIvMac(value),
+            aesKey
+        )
+    }
+
+    private fun getKeyPairGenerator(): KeyPairGenerator {
+        return KeyPairGenerator.getInstance(RSA_ALGORITHM, KEY_PAIR_GENERATOR_PROVIDER)
+    }
+
     @Throws(SecureStorageException::class)
     private fun rsaKeyPairExists(keyStoreInstance: KeyStore): Boolean {
         try {
@@ -84,14 +119,6 @@ internal object KeyStoreToolApi21 {
     private fun aesKeyExists(context: Context): Boolean {
         return SecureStorage.getSharedPreferencesInstance(context).contains(KEY_AES_CONFIDENTIALITY_KEY)
                 && SecureStorage.getSharedPreferencesInstance(context).contains(KEY_AES_INTEGRITY_KEY)
-    }
-
-    private fun getKeyPairGenerator(): KeyPairGenerator {
-        return KeyPairGenerator.getInstance(RSA_ALGORITHM, KEY_PAIR_GENERATOR_PROVIDER)
-    }
-
-    fun generateKey(context: Context) {
-        generateRsaKey(context)
     }
 
     @Suppress("DEPRECATION")
@@ -252,20 +279,5 @@ internal object KeyStoreToolApi21 {
                 SecureStorageException.ExceptionType.INTERNAL_LIBRARY_EXCEPTION
             )
         }
-    }
-
-    fun encryptValue(context: Context, keyStoreInstance: KeyStore, cipher: Cipher, key: String, value: String): String {
-        generateAesKey(context, keyStoreInstance, cipher, key)
-
-        val aesKey = getAesKey(context, keyStoreInstance, cipher, key)
-        return AesCbcWithIntegrity.encrypt(value, aesKey).toString()
-    }
-
-    fun decryptValue(context: Context, keyStoreInstance: KeyStore, cipher: Cipher, key: String, value: String): String {
-        val aesKey = getAesKey(context, keyStoreInstance, cipher, key)
-        return AesCbcWithIntegrity.decryptString(
-            AesCbcWithIntegrity.CipherTextIvMac(value),
-            aesKey
-        )
     }
 }
