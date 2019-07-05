@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("DEPRECATION")
+
 package de.adorsys.android.securestorage2.internal
 
 import android.annotation.SuppressLint
@@ -121,7 +123,6 @@ internal object KeyStoreToolApi21 {
                 && SecureStorage.getSharedPreferencesInstance(context).contains(KEY_AES_INTEGRITY_KEY)
     }
 
-    @Suppress("DEPRECATION")
     private fun generateRsaKey(context: Context): KeyPair? {
         val keyPairGenerator = getKeyPairGenerator()
 

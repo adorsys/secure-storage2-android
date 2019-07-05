@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion 28
@@ -26,3 +27,30 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
+
+ext {
+    bintrayRepo = 'adorsys'
+    bintrayName = 'securestorage2'
+
+    publishedGroupId = 'de.adorsys.android'
+    libraryName = 'securestorage2'
+    artifact = 'securestorage2'
+
+    libraryDescription = 'securestorage2'
+
+    siteUrl = 'https://www.adorsys.de/'
+    gitUrl = 'https://github.com/adorsys/secure-storage2-android.git'
+
+    libraryVersion = "${versionName}"
+
+    developerId = 'andev'
+    developerName = 'Andev Adorsys'
+    developerEmail = 'adorsys.andev@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+apply from: 'https://raw.githubusercontent.com/adorsys/jcenter-distribution/master/installv.gradle'
+apply from: 'https://raw.githubusercontent.com/adorsys/jcenter-distribution/master/bintrayv.gradle'
