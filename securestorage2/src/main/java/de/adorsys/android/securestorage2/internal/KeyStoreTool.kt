@@ -80,7 +80,7 @@ internal object KeyStoreTool {
             if (apiVersionMAndAbove(context)) {
                 KeyStoreToolApi23.generateKey()
             } else {
-                KeyStoreToolApi21.generateKey(context, getKeyStoreInstance(), getCipher(context))
+                KeyStoreToolApi21.generateKey(context)
             }
         }
     }
@@ -89,7 +89,7 @@ internal object KeyStoreTool {
         return if (apiVersionMAndAbove(context)) {
             KeyStoreToolApi23.encryptValue(context, getKeyStoreInstance(), getCipher(context), key, value)
         } else {
-            KeyStoreToolApi21.encryptValue(context, getKeyStoreInstance(), getCipher(context), value)
+            KeyStoreToolApi21.encryptValue(context, getKeyStoreInstance(), getCipher(context), key, value)
         }
     }
 
@@ -97,7 +97,7 @@ internal object KeyStoreTool {
         return if (apiVersionMAndAbove(context)) {
             KeyStoreToolApi23.decryptValue(context, getKeyStoreInstance(), getCipher(context), key, value)
         } else {
-            KeyStoreToolApi21.decryptValue(context, getKeyStoreInstance(), getCipher(context), value)
+            KeyStoreToolApi21.decryptValue(context, getKeyStoreInstance(), getCipher(context), key, value)
         }
     }
 

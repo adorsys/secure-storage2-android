@@ -19,8 +19,6 @@ import javax.security.auth.x500.X500Principal
 @SuppressLint("CommitPrefEdits")
 internal object KeyStoreToolApi21 {
 
-    //TODO GO TO METHOD generateAesKey() to see full TODO
-
     //================================================================================
     // SecureStorage KeyStoreTool API >= 21 && API < 23 Logic
     //================================================================================
@@ -76,9 +74,8 @@ internal object KeyStoreToolApi21 {
         return KeyPairGenerator.getInstance(RSA_ALGORITHM, KEY_PAIR_GENERATOR_PROVIDER)
     }
 
-    fun generateKey(context: Context, keyStoreInstance: KeyStore, cipher: Cipher) {
+    fun generateKey(context: Context) {
         generateRsaKey(context)
-        generateAesKey(context, keyStoreInstance, cipher)
     }
 
     @Suppress("DEPRECATION")
@@ -101,18 +98,19 @@ internal object KeyStoreToolApi21 {
         return keyPairGenerator.generateKeyPair()
     }
 
-    //TODO Change the logic so that you create and store separate and different AES keys for
-    // each value you store in SecureStorage and store that aes key with the key:
-    // "KEY of normal value + Key for AES Key Part (CONFIDENTIALITY/INTEGRITY)"
-
-    private fun generateAesKey(context: Context, keyStoreInstance: KeyStore, cipher: Cipher) {
+    private fun generateAesKey(
+        context: Context,
+        keyStoreInstance: KeyStore,
+        cipher: Cipher,
+        keyPrefix: String
+    ): SecretKeys {
         val secretKeys = AesCbcWithIntegrity.generateKey()
 
         storeAesKeyPart(
             context,
             keyStoreInstance,
             cipher,
-            KEY_AES_CONFIDENTIALITY_KEY,
+            keyPrefix + KEY_AES_CONFIDENTIALITY_KEY,
             encodeKeyToString(secretKeys.confidentialityKey)
         )
 
@@ -120,9 +118,11 @@ internal object KeyStoreToolApi21 {
             context,
             keyStoreInstance,
             cipher,
-            KEY_AES_INTEGRITY_KEY,
+            keyPrefix + KEY_AES_INTEGRITY_KEY,
             encodeKeyToString(secretKeys.integrityKey)
         )
+
+        return secretKeys
     }
 
     private fun storeAesKeyPart(
@@ -178,9 +178,10 @@ internal object KeyStoreToolApi21 {
         return SecretKeySpec(encodedKey, 0, encodedKey.size, AES_ALGORITHM)
     }
 
-    private fun getAesKey(context: Context, keyStoreInstance: KeyStore, cipher: Cipher): SecretKeys {
-        val encodedIntegrityKey = getAesKeyPart(context, keyStoreInstance, cipher, KEY_AES_INTEGRITY_KEY)
-        val encodedConfidentialityKey = getAesKeyPart(context, keyStoreInstance, cipher, KEY_AES_CONFIDENTIALITY_KEY)
+    private fun getAesKey(context: Context, keyStoreInstance: KeyStore, cipher: Cipher, keyPrefix: String): SecretKeys {
+        val encodedIntegrityKey = getAesKeyPart(context, keyStoreInstance, cipher, keyPrefix + KEY_AES_INTEGRITY_KEY)
+        val encodedConfidentialityKey =
+            getAesKeyPart(context, keyStoreInstance, cipher, keyPrefix + KEY_AES_CONFIDENTIALITY_KEY)
 
         val reconstructedIntegrityKey = decodeStringToKey(encodedIntegrityKey)
         val reconstructedConfidentialityKey = decodeStringToKey(encodedConfidentialityKey)
@@ -237,13 +238,15 @@ internal object KeyStoreToolApi21 {
         }
     }
 
-    fun encryptValue(context: Context, keyStoreInstance: KeyStore, cipher: Cipher, value: String): String {
-        val aesKey = getAesKey(context, keyStoreInstance, cipher)
+    fun encryptValue(context: Context, keyStoreInstance: KeyStore, cipher: Cipher, key: String, value: String): String {
+        generateAesKey(context, keyStoreInstance, cipher, key)
+
+        val aesKey = getAesKey(context, keyStoreInstance, cipher, key)
         return AesCbcWithIntegrity.encrypt(value, aesKey).toString()
     }
 
-    fun decryptValue(context: Context, keyStoreInstance: KeyStore, cipher: Cipher, value: String): String {
-        val aesKey = getAesKey(context, keyStoreInstance, cipher)
+    fun decryptValue(context: Context, keyStoreInstance: KeyStore, cipher: Cipher, key: String, value: String): String {
+        val aesKey = getAesKey(context, keyStoreInstance, cipher, key)
         return AesCbcWithIntegrity.decryptString(
             AesCbcWithIntegrity.CipherTextIvMac(value),
             aesKey
