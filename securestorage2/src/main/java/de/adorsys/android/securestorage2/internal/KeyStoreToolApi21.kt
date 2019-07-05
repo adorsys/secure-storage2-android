@@ -15,6 +15,7 @@
  */
 
 @file:Suppress("DEPRECATION")
+
 package de.adorsys.android.securestorage2.internal
 
 import android.annotation.SuppressLint
@@ -32,6 +33,9 @@ import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 import javax.security.auth.x500.X500Principal
+import de.adorsys.android.securestorage2.SecureStorageException
+import android.os.Build.VERSION_CODES
+import android.os.Build.VERSION
 
 @SuppressLint("CommitPrefEdits")
 internal object KeyStoreToolApi21 {
@@ -250,46 +254,65 @@ internal object KeyStoreToolApi21 {
 
     @Throws(SecureStorageException::class)
     private fun getPrivateKey(context: Context, keyStoreInstance: KeyStore): PrivateKey {
+        val privateKey: PrivateKey
 
-        if (rsaKeyPairExists(keyStoreInstance)) {
-            try {
-                val privateKeyEntry = keyStoreInstance
-                    .getEntry(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
-                return privateKeyEntry.privateKey
-            } catch (e: Exception) {
+        keyStoreInstance.getKey(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null)
+        try {
+            if (rsaKeyPairExists(keyStoreInstance)) {
+                privateKey = if (VERSION.SDK_INT >= VERSION_CODES.P) {
+                    // only for P and newer versions
+                    keyStoreInstance.getKey(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null) as PrivateKey
+                } else {
+                    val privateKeyEntry = keyStoreInstance.getEntry(
+                        SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS,
+                        null
+                    ) as KeyStore.PrivateKeyEntry
+                    privateKeyEntry.privateKey
+                }
+            } else {
                 throw SecureStorageException(
-                    e.message!!,
-                    e,
-                    SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
+                    context.getString(R.string.message_keypair_does_not_exist),
+                    null,
+                    SecureStorageException.ExceptionType.INTERNAL_LIBRARY_EXCEPTION
                 )
             }
-        } else {
-            throw SecureStorageException(
-                context.getString(R.string.message_keypair_does_not_exist), null,
-                SecureStorageException.ExceptionType.INTERNAL_LIBRARY_EXCEPTION
-            )
+        } catch (e: Exception) {
+            throw SecureStorageException(e.message!!, e, SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION)
         }
+
+        return privateKey
     }
 
     @Throws(SecureStorageException::class)
     private fun getPublicKey(context: Context, keyStoreInstance: KeyStore): PublicKey {
-        if (rsaKeyPairExists(keyStoreInstance)) {
-            try {
-                val privateKeyEntry = keyStoreInstance
-                    .getEntry(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
-                return privateKeyEntry.certificate.publicKey
-            } catch (e: Exception) {
+        val publicKey: PublicKey
+        try {
+            if (rsaKeyPairExists(keyStoreInstance)) {
+                publicKey = if (VERSION.SDK_INT >= VERSION_CODES.P) {
+                    // only for P and newer versions
+                    keyStoreInstance.getCertificate(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS).publicKey
+                } else {
+                    val privateKeyEntry = keyStoreInstance.getEntry(
+                        SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS,
+                        null
+                    ) as KeyStore.PrivateKeyEntry
+                    privateKeyEntry.certificate.publicKey
+                }
+            } else {
                 throw SecureStorageException(
-                    e.message!!,
-                    e,
-                    SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
+                    context.getString(R.string.message_keypair_does_not_exist),
+                    null,
+                    SecureStorageException.ExceptionType.INTERNAL_LIBRARY_EXCEPTION
                 )
             }
-        } else {
-            throw SecureStorageException(
-                context.getString(R.string.message_keypair_does_not_exist), null,
-                SecureStorageException.ExceptionType.INTERNAL_LIBRARY_EXCEPTION
-            )
+        } catch (e: Exception) {
+            throw SecureStorageException(e.message!!, e, SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION)
         }
+
+        return publicKey
+    }
+
+    private fun getKey1(context: Context) {
+
     }
 }
