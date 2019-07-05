@@ -57,12 +57,6 @@ internal object KeyStoreToolApi23 {
     }
 
     @RequiresApi(23)
-    private fun getKeyGenerator(): KeyGenerator {
-        return KeyGenerator
-            .getInstance(KeyProperties.KEY_ALGORITHM_AES, KEY_GENERATOR_PROVIDER)
-    }
-
-    @RequiresApi(23)
     fun generateKey(): SecretKey {
         val keyGenerator = getKeyGenerator()
 
@@ -79,8 +73,8 @@ internal object KeyStoreToolApi23 {
                     .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
                     .setKeySize(256)
-                    .setIsStrongBoxBacked(SecureStorageConfig.INSTANCE.CAN_USE_LIBRARY)
-                    .setUserConfirmationRequired(SecureStorageConfig.INSTANCE.CAN_USE_LIBRARY)
+                    .setIsStrongBoxBacked(SecureStorageConfig.INSTANCE.EXPLICITLY_USE_SECURE_HARDWARE)
+                    .setUserConfirmationRequired(SecureStorageConfig.INSTANCE.EXPLICITLY_USE_SECURE_HARDWARE)
             } else {
                 KeyGenParameterSpec.Builder(
                     SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS,
@@ -139,11 +133,6 @@ internal object KeyStoreToolApi23 {
     }
 
     @RequiresApi(23)
-    internal fun isKeyInsideSecureHardware(keyStoreInstance: KeyStore): Boolean {
-        return getKeyInfo(keyStoreInstance)?.isInsideSecureHardware ?: false
-    }
-
-    @RequiresApi(23)
     internal fun deleteKey(context: Context, keyStoreInstance: KeyStore) {
         // Delete Key from Keystore
         if (keyExists(keyStoreInstance)) {
@@ -158,6 +147,33 @@ internal object KeyStoreToolApi23 {
                 context.getString(R.string.message_key_does_not_exist)
             )
         }
+    }
+
+    @RequiresApi(23)
+    private fun saveIVInSecureStorage(context: Context, key: String, iv: ByteArray) {
+        val preferences =
+            context.getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        val encodedIv = Base64.encodeToString(iv, Base64.DEFAULT)
+        preferences.edit().putString("$KEY_CIPHER_IV$key", encodedIv).apply()
+    }
+
+    @RequiresApi(23)
+    private fun getIVFromSecureStorage(context: Context, key: String): ByteArray {
+        val preferences =
+            context.getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        val encodedIv = preferences.getString("$KEY_CIPHER_IV$key", null)
+        return Base64.decode(encodedIv, Base64.DEFAULT)
+    }
+
+    @RequiresApi(23)
+    internal fun isKeyInsideSecureHardware(keyStoreInstance: KeyStore): Boolean {
+        return getKeyInfo(keyStoreInstance)?.isInsideSecureHardware ?: false
+    }
+
+    @RequiresApi(23)
+    private fun getKeyGenerator(): KeyGenerator {
+        return KeyGenerator
+            .getInstance(KeyProperties.KEY_ALGORITHM_AES, KEY_GENERATOR_PROVIDER)
     }
 
     @RequiresApi(23)
@@ -180,23 +196,6 @@ internal object KeyStoreToolApi23 {
             // Not an Android KeyStore key.
             keyInfo = null
         }
-
         return keyInfo
-    }
-
-    @RequiresApi(23)
-    private fun saveIVInSecureStorage(context: Context, key: String, iv: ByteArray) {
-        val preferences =
-            context.getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        val encodedIv = Base64.encodeToString(iv, Base64.DEFAULT)
-        preferences.edit().putString("$KEY_CIPHER_IV$key", encodedIv).apply()
-    }
-
-    @RequiresApi(23)
-    private fun getIVFromSecureStorage(context: Context, key: String): ByteArray {
-        val preferences =
-            context.getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        val encodedIv = preferences.getString("$KEY_CIPHER_IV$key", null)
-        return Base64.decode(encodedIv, Base64.DEFAULT)
     }
 }
