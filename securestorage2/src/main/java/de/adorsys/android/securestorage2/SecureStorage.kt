@@ -34,68 +34,90 @@ object SecureStorage {
 
     @Throws(SecureStorageException::class)
     fun initSecureStorageKeys(context: Context) {
-        KeyStoreTool.setInstallApiVersionFlag(context)
+        val applicationContext = context.applicationContext
 
-        if (!KeyStoreTool.keyExists(context)) {
-            KeyStoreTool.initKeys(context)
+        checkAppCanUseLibrary()
+
+        KeyStoreTool.setInstallApiVersionFlag(applicationContext)
+
+        if (!KeyStoreTool.keyExists(applicationContext)) {
+            KeyStoreTool.initKeys(applicationContext)
         }
     }
 
     @Throws(SecureStorageException::class)
     fun deviceHasSecureHardwareSupport(context: Context): Boolean {
-        return KeyStoreTool.deviceHasSecureHardwareSupport(context)
+        val applicationContext = context.applicationContext
+
+        checkAppCanUseLibrary()
+
+        return KeyStoreTool.deviceHasSecureHardwareSupport(applicationContext)
     }
 
     @RequiresApi(23)
     @Throws(SecureStorageException::class)
     fun isKeyInsideSecureHardware() {
+        checkAppCanUseLibrary()
+
         KeyStoreTool.isKeyInsideSecureHardware()
     }
 
     @Throws(SecureStorageException::class)
     fun putString(context: Context, key: String, value: String) {
+        val applicationContext = context.applicationContext
+
         checkAppCanUseLibrary()
 
-        if (!KeyStoreTool.keyExists(context)) {
-            KeyStoreTool.generateKey(context)
+        if (!KeyStoreTool.keyExists(applicationContext)) {
+            KeyStoreTool.generateKey(applicationContext)
         }
 
-        val encryptedValue = KeyStoreTool.encryptValue(context, key, value)
+        val encryptedValue = KeyStoreTool.encryptValue(applicationContext, key, value)
 
-        putSecureValue(context, key, encryptedValue)
+        putSecureValue(applicationContext, key, encryptedValue)
     }
 
     @Throws(SecureStorageException::class)
     fun putBoolean(context: Context, key: String, value: Boolean) {
-        putString(context, key, value.toString())
+        val applicationContext = context.applicationContext
+
+        putString(applicationContext, key, value.toString())
     }
 
     @Throws(SecureStorageException::class)
     fun putFloat(context: Context, key: String, value: Float) {
-        putString(context, key, value.toString())
+        val applicationContext = context.applicationContext
+
+        putString(applicationContext, key, value.toString())
     }
 
     @Throws(SecureStorageException::class)
     fun putLong(context: Context, key: String, value: Long) {
-        putString(context, key, value.toString())
+        val applicationContext = context.applicationContext
+
+        putString(applicationContext, key, value.toString())
     }
 
     @Throws(SecureStorageException::class)
     fun putInt(context: Context, key: String, value: Int) {
-        putString(context, key, value.toString())
+        val applicationContext = context.applicationContext
+
+        putString(applicationContext, key, value.toString())
     }
 
     @Throws(SecureStorageException::class)
     fun getString(context: Context, key: String, defaultValue: String): String {
+        val applicationContext = context.applicationContext
+
         checkAppCanUseLibrary()
 
-        val encryptedValue = getSecureValue(context, key)
+        val encryptedValue = getSecureValue(applicationContext, key)
 
         if (encryptedValue.isNullOrBlank()) {
             return defaultValue
         }
 
-        val decryptedValue = KeyStoreTool.decryptValue(context, key, encryptedValue)
+        val decryptedValue = KeyStoreTool.decryptValue(applicationContext, key, encryptedValue)
 
         return if (decryptedValue.isNullOrBlank()) {
             defaultValue
@@ -105,43 +127,61 @@ object SecureStorage {
     }
 
     fun getBoolean(context: Context, key: String, defaultValue: Boolean): Boolean {
-        return parseBoolean(getString(context, key, defaultValue.toString()))
+        val applicationContext = context.applicationContext
+
+        return parseBoolean(getString(applicationContext, key, defaultValue.toString()))
     }
 
     fun getFloat(context: Context, key: String, defaultValue: Float): Float {
-        return parseFloat(getString(context, key, defaultValue.toString()))
+        val applicationContext = context.applicationContext
+
+        return parseFloat(getString(applicationContext, key, defaultValue.toString()))
     }
 
     fun getLong(context: Context, key: String, defaultValue: Long): Long {
-        return parseLong(getString(context, key, defaultValue.toString()))
+        val applicationContext = context.applicationContext
+
+        return parseLong(getString(applicationContext, key, defaultValue.toString()))
     }
 
     fun getInt(context: Context, key: String, defaultValue: Int): Int {
-        return parseInt(getString(context, key, defaultValue.toString()))
+        val applicationContext = context.applicationContext
+
+        return parseInt(getString(applicationContext, key, defaultValue.toString()))
     }
 
     @Throws(SecureStorageException::class)
     fun contains(context: Context, key: String): Boolean {
+        val applicationContext = context.applicationContext
+
         checkAppCanUseLibrary()
 
-        return getSharedPreferencesInstance(context).contains(key)
+        return try {
+            getSharedPreferencesInstance(applicationContext).contains(key) && KeyStoreTool.keyExists(applicationContext)
+        } catch (e: SecureStorageException) {
+            false
+        }
     }
 
     @Throws(SecureStorageException::class)
     fun remove(context: Context, key: String) {
+        val applicationContext = context.applicationContext
+
         checkAppCanUseLibrary()
 
-        removeSecureValue(context, key)
+        removeSecureValue(applicationContext, key)
     }
 
     @Throws(SecureStorageException::class)
     fun clearAllValues(context: Context) {
+        val applicationContext = context.applicationContext
+
         checkAppCanUseLibrary()
 
-        if (KeyStoreTool.keyExists(context)) {
-            KeyStoreTool.deleteKey(context)
+        if (KeyStoreTool.keyExists(applicationContext)) {
+            KeyStoreTool.deleteKey(applicationContext)
         }
-        clearAllSecureValues(context)
+        clearAllSecureValues(applicationContext)
     }
 
     @Throws(SecureStorageException::class)
@@ -149,9 +189,11 @@ object SecureStorage {
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener
     ) {
+        val applicationContext = context.applicationContext
+
         checkAppCanUseLibrary()
 
-        getSharedPreferencesInstance(context).registerOnSharedPreferenceChangeListener(listener)
+        getSharedPreferencesInstance(applicationContext).registerOnSharedPreferenceChangeListener(listener)
     }
 
     @Throws(SecureStorageException::class)
@@ -159,13 +201,20 @@ object SecureStorage {
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener
     ) {
+        val applicationContext = context.applicationContext
+
         checkAppCanUseLibrary()
 
-        getSharedPreferencesInstance(context).unregisterOnSharedPreferenceChangeListener(listener)
+        getSharedPreferencesInstance(applicationContext).unregisterOnSharedPreferenceChangeListener(listener)
     }
 
     internal fun getSharedPreferencesInstance(context: Context): SharedPreferences {
-        return context.getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, MODE_PRIVATE)
+        val applicationContext = context.applicationContext
+
+        return applicationContext.getSharedPreferences(
+            SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME,
+            MODE_PRIVATE
+        )
     }
 
     private fun putSecureValue(context: Context, key: String, value: String) {

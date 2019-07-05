@@ -19,6 +19,7 @@ package de.adorsys.android.securestorage2.internal
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.security.KeyPairGeneratorSpec
 import android.util.Base64
 import de.adorsys.android.securestorage2.*
@@ -110,7 +111,14 @@ internal object KeyStoreToolApi21 {
     @Throws(SecureStorageException::class)
     private fun rsaKeyPairExists(keyStoreInstance: KeyStore): Boolean {
         try {
-            return keyStoreInstance.getKey(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null) != null
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                // public key is retrieved via getCertificate
+                (keyStoreInstance.getCertificate(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS) != null
+                        // private key is retrieved via getKey
+                        && keyStoreInstance.getKey(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null) != null)
+            } else {
+                keyStoreInstance.getKey(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null) != null
+            }
         } catch (e: Exception) {
             throw SecureStorageException(e.message!!, e, SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION)
         }
