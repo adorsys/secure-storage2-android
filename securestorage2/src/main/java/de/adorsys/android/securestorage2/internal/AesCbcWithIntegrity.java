@@ -1,5 +1,3 @@
-package de.adorsys.android.securestorage2.internal;
-
 /*
  * Copyright (c) 2014-2015 Tozny LLC
  *
@@ -23,6 +21,8 @@ package de.adorsys.android.securestorage2.internal;
  *
  * Created by Isaac Potoczny-Jones on 11/12/14.
  */
+
+package de.adorsys.android.securestorage2.internal;
 
 import android.util.Base64;
 import org.jetbrains.annotations.NotNull;
