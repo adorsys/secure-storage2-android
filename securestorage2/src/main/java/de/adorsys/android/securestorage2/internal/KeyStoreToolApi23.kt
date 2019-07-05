@@ -25,8 +25,9 @@ import java.security.KeyStoreException
 import android.security.keystore.KeyProperties
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyInfo
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.util.Base64
+import de.adorsys.android.securestorage2.SecureStorageException
 import java.security.spec.InvalidKeySpecException
 import java.util.*
 import javax.crypto.Cipher
@@ -50,7 +51,11 @@ internal object KeyStoreToolApi23 {
         try {
             return keyStoreInstance.getKey(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null) != null
         } catch (e: Exception) {
-            throw SecureStorageException(e.message!!, e, SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION)
+            throw SecureStorageException(
+                e.message!!,
+                e,
+                SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
+            )
         }
     }
 
@@ -137,7 +142,11 @@ internal object KeyStoreToolApi23 {
             try {
                 keyStoreInstance.deleteEntry(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS)
             } catch (e: KeyStoreException) {
-                throw SecureStorageException(e.message!!, e, SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION)
+                throw SecureStorageException(
+                    e.message!!,
+                    e,
+                    SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
+                )
             }
         } else {
             throw SecureStorageException(

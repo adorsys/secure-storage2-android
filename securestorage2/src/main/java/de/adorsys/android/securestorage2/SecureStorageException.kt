@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package de.adorsys.android.securestorage2.internal
+package de.adorsys.android.securestorage2
 
 @Suppress("unused")
-internal class SecureStorageException(detailMessage: String, cause: Throwable?, val type: ExceptionType) :
+class SecureStorageException(detailMessage: String, cause: Throwable?, val type: ExceptionType) :
     Exception(detailMessage, cause) {
 
     enum class ExceptionType {

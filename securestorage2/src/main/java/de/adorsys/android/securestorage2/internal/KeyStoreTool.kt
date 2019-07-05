@@ -19,13 +19,15 @@ package de.adorsys.android.securestorage2.internal
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.v4.hardware.fingerprint.FingerprintManagerCompat
+import androidx.annotation.RequiresApi
+import androidx.core.hardware.fingerprint.FingerprintManagerCompat
 import android.view.View.LAYOUT_DIRECTION_RTL
 import de.adorsys.android.securestorage2.SecureStorage
+import de.adorsys.android.securestorage2.SecureStorage.KEY_INSTALLATION_API_VERSION_UNDER_M
 import de.adorsys.android.securestorage2.SecureStorageConfig
+import de.adorsys.android.securestorage2.SecureStorageException
 import de.adorsys.android.securestorage2.execute
-import de.adorsys.android.securestorage2.internal.SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
+import de.adorsys.android.securestorage2.SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
 import java.security.KeyStore
 import java.util.*
 import javax.crypto.Cipher
@@ -33,7 +35,6 @@ import javax.crypto.Cipher
 @SuppressLint("NewApi")
 internal object KeyStoreTool {
 
-    private const val KEY_INSTALLATION_API_VERSION_UNDER_M = "INSTALLATION_API_VERSION_UNDER_M"
     private const val KEY_KEYSTORE_NAME = "AndroidKeyStore"
     private const val KEY_ASYMMETRIC_TRANSFORMATION_ALGORITHM = "RSA/ECB/PKCS1Padding"
     private const val KEY_SYMMETRIC_TRANSFORMATION_ALGORITHM = "AES/CBC/PKCS7Padding"
@@ -106,8 +107,15 @@ internal object KeyStoreTool {
     }
 
     @SuppressLint("CommitPrefEdits")
-    internal fun setInstallApiVersionFlag(context: Context) {
+    internal fun setInstallApiVersionFlag(context: Context, forceSet: Boolean = false) {
         val preferences = SecureStorage.getSharedPreferencesInstance(context)
+
+        if (forceSet) {
+            SecureStorage.getSharedPreferencesInstance(context).edit()
+                .putBoolean(KEY_INSTALLATION_API_VERSION_UNDER_M, true)
+                .execute(SecureStorageConfig.INSTANCE.ASYNC_OPERATION)
+            return
+        }
 
         val installationApiVersionUnderM = preferences.contains(KEY_INSTALLATION_API_VERSION_UNDER_M)
 

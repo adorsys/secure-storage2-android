@@ -20,9 +20,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import de.adorsys.android.securestorage2.internal.KeyStoreTool
-import de.adorsys.android.securestorage2.internal.SecureStorageException
 import java.lang.Boolean.parseBoolean
 import java.lang.Float.parseFloat
 import java.lang.Integer.parseInt
@@ -31,6 +30,7 @@ import java.lang.Long.parseLong
 @Suppress("unused")
 @SuppressLint("CommitPrefEdits")
 object SecureStorage {
+    internal const val KEY_INSTALLATION_API_VERSION_UNDER_M = "INSTALLATION_API_VERSION_UNDER_M"
 
     @Throws(SecureStorageException::class)
     fun initSecureStorageKeys(context: Context) {
@@ -156,11 +156,7 @@ object SecureStorage {
 
         checkAppCanUseLibrary()
 
-        return try {
-            getSharedPreferencesInstance(applicationContext).contains(key) && KeyStoreTool.keyExists(applicationContext)
-        } catch (e: SecureStorageException) {
-            false
-        }
+        return getSharedPreferencesInstance(applicationContext).contains(key)
     }
 
     @Throws(SecureStorageException::class)
@@ -174,6 +170,21 @@ object SecureStorage {
 
     @Throws(SecureStorageException::class)
     fun clearAllValues(context: Context) {
+        val applicationContext = context.applicationContext
+
+        checkAppCanUseLibrary()
+
+        val apiVersionUnderMExisted = contains(applicationContext, KEY_INSTALLATION_API_VERSION_UNDER_M)
+
+        clearAllSecureValues(applicationContext)
+
+        if (apiVersionUnderMExisted) {
+            KeyStoreTool.setInstallApiVersionFlag(applicationContext, true)
+        }
+    }
+
+    @Throws(SecureStorageException::class)
+    fun clearAllValuesAndDeleteKeys(context: Context) {
         val applicationContext = context.applicationContext
 
         checkAppCanUseLibrary()

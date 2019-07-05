@@ -66,7 +66,11 @@ internal object KeyStoreToolApi21 {
             try {
                 keyStoreInstance.deleteEntry(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS)
             } catch (e: KeyStoreException) {
-                throw SecureStorageException(e.message!!, e, SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION)
+                throw SecureStorageException(
+                    e.message!!,
+                    e,
+                    SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
+                )
             }
         } else {
             throw SecureStorageException(
@@ -120,7 +124,11 @@ internal object KeyStoreToolApi21 {
                 keyStoreInstance.getKey(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null) != null
             }
         } catch (e: Exception) {
-            throw SecureStorageException(e.message!!, e, SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION)
+            throw SecureStorageException(
+                e.message!!,
+                e,
+                SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
+            )
         }
     }
 
@@ -249,7 +257,11 @@ internal object KeyStoreToolApi21 {
                     .getEntry(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
                 return privateKeyEntry.privateKey
             } catch (e: Exception) {
-                throw SecureStorageException(e.message!!, e, SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION)
+                throw SecureStorageException(
+                    e.message!!,
+                    e,
+                    SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
+                )
             }
         } else {
             throw SecureStorageException(
@@ -267,7 +279,11 @@ internal object KeyStoreToolApi21 {
                     .getEntry(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
                 return privateKeyEntry.certificate.publicKey
             } catch (e: Exception) {
-                throw SecureStorageException(e.message!!, e, SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION)
+                throw SecureStorageException(
+                    e.message!!,
+                    e,
+                    SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
+                )
             }
         } else {
             throw SecureStorageException(
