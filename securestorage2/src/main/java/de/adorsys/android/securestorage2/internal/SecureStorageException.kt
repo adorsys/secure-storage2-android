@@ -16,6 +16,7 @@
 
 package de.adorsys.android.securestorage2.internal
 
+@Suppress("unused")
 internal class SecureStorageException(detailMessage: String, cause: Throwable?, val type: ExceptionType) :
     Exception(detailMessage, cause) {
 

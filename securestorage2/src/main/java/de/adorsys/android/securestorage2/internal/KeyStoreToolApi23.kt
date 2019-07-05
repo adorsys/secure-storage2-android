@@ -18,8 +18,6 @@ package de.adorsys.android.securestorage2.internal
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
-import de.adorsys.android.securestorage2.BuildConfig
 import de.adorsys.android.securestorage2.R
 import de.adorsys.android.securestorage2.SecureStorageConfig
 import java.security.KeyStore
@@ -141,10 +139,11 @@ internal object KeyStoreToolApi23 {
             } catch (e: KeyStoreException) {
                 throw SecureStorageException(e.message!!, e, SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION)
             }
-        } else if (BuildConfig.DEBUG) {
-            Log.e(
-                KeyStoreTool::class.java.name,
-                context.getString(R.string.message_key_does_not_exist)
+        } else {
+            throw SecureStorageException(
+                context.getString(R.string.message_key_does_not_exist),
+                null,
+                SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
             )
         }
     }

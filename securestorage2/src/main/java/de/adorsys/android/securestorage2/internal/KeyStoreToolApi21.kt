@@ -15,12 +15,10 @@
  */
 
 @file:Suppress("DEPRECATION")
-
 package de.adorsys.android.securestorage2.internal
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.security.KeyPairGeneratorSpec
 import android.util.Base64
 import de.adorsys.android.securestorage2.*
@@ -69,10 +67,11 @@ internal object KeyStoreToolApi21 {
             } catch (e: KeyStoreException) {
                 throw SecureStorageException(e.message!!, e, SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION)
             }
-        } else if (BuildConfig.DEBUG) {
-            Log.e(
-                KeyStoreTool::class.java.name,
-                context.getString(R.string.message_keypair_does_not_exist)
+        } else {
+            throw SecureStorageException(
+                context.getString(R.string.message_keypair_does_not_exist),
+                null,
+                SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
             )
         }
     }
@@ -245,12 +244,6 @@ internal object KeyStoreToolApi21 {
                 throw SecureStorageException(e.message!!, e, SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION)
             }
         } else {
-            if (BuildConfig.DEBUG) {
-                Log.e(
-                    KeyStoreTool::class.java.name,
-                    context.getString(R.string.message_keypair_does_not_exist)
-                )
-            }
             throw SecureStorageException(
                 context.getString(R.string.message_keypair_does_not_exist), null,
                 SecureStorageException.ExceptionType.INTERNAL_LIBRARY_EXCEPTION
@@ -269,12 +262,6 @@ internal object KeyStoreToolApi21 {
                 throw SecureStorageException(e.message!!, e, SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION)
             }
         } else {
-            if (BuildConfig.DEBUG) {
-                Log.e(
-                    KeyStoreTool::class.java.name,
-                    context.getString(R.string.message_keypair_does_not_exist)
-                )
-            }
             throw SecureStorageException(
                 context.getString(R.string.message_keypair_does_not_exist), null,
                 SecureStorageException.ExceptionType.INTERNAL_LIBRARY_EXCEPTION

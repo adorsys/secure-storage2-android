@@ -30,6 +30,7 @@ enum class SecureStorageConfig {
     internal var CAN_USE_LIBRARY = true
     internal var ASYNC_OPERATION = true
 
+    @Suppress("unused")
     fun initializeSecureStorageConfig(
         context: Context,
         encryptionKeyAlias: String? = null,

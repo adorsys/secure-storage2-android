@@ -28,6 +28,7 @@ import java.lang.Float.parseFloat
 import java.lang.Integer.parseInt
 import java.lang.Long.parseLong
 
+@Suppress("unused")
 @SuppressLint("CommitPrefEdits")
 object SecureStorage {
 
