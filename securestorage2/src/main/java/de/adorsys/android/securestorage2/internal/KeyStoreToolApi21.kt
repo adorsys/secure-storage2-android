@@ -20,7 +20,6 @@ package de.adorsys.android.securestorage2.internal
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.security.KeyPairGeneratorSpec
 import android.util.Base64
 import de.adorsys.android.securestorage2.*
@@ -51,9 +50,8 @@ internal object KeyStoreToolApi21 {
     private const val KEY_AES_INTEGRITY_KEY = "AesIntegrityKey"
 
     @Throws(SecureStorageException::class)
-    internal fun keyExists(context: Context, keyStoreInstance: KeyStore): Boolean {
-        return rsaKeyPairExists(keyStoreInstance) && aesKeyExists(context)
-    }
+    internal fun keyExists(context: Context, keyStoreInstance: KeyStore): Boolean =
+        rsaKeyPairExists(keyStoreInstance) && aesKeyExists(context)
 
     internal fun generateKey(context: Context) {
         generateRsaKey(context)
@@ -112,14 +110,13 @@ internal object KeyStoreToolApi21 {
         )
     }
 
-    private fun getKeyPairGenerator(): KeyPairGenerator {
-        return KeyPairGenerator.getInstance(RSA_ALGORITHM, KEY_PAIR_GENERATOR_PROVIDER)
-    }
+    private fun getKeyPairGenerator(): KeyPairGenerator =
+        KeyPairGenerator.getInstance(RSA_ALGORITHM, KEY_PAIR_GENERATOR_PROVIDER)
 
     @Throws(SecureStorageException::class)
     private fun rsaKeyPairExists(keyStoreInstance: KeyStore): Boolean {
         try {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            return if (VERSION.SDK_INT >= VERSION_CODES.P) {
                 // public key is retrieved via getCertificate
                 (keyStoreInstance.getCertificate(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS) != null
                         // private key is retrieved via getKey
@@ -137,10 +134,9 @@ internal object KeyStoreToolApi21 {
     }
 
     @Throws(SecureStorageException::class)
-    private fun aesKeyExists(context: Context): Boolean {
-        return SecureStorage.getSharedPreferencesInstance(context).contains(KEY_AES_CONFIDENTIALITY_KEY)
+    private fun aesKeyExists(context: Context): Boolean =
+        SecureStorage.getSharedPreferencesInstance(context).contains(KEY_AES_CONFIDENTIALITY_KEY)
                 && SecureStorage.getSharedPreferencesInstance(context).contains(KEY_AES_INTEGRITY_KEY)
-    }
 
     private fun generateRsaKey(context: Context): KeyPair? {
         val keyPairGenerator = getKeyPairGenerator()
@@ -232,9 +228,7 @@ internal object KeyStoreToolApi21 {
         }
     }
 
-    private fun encodeKeyToString(key: SecretKey): String {
-        return Base64.encodeToString(key.encoded, Base64.DEFAULT)
-    }
+    private fun encodeKeyToString(key: SecretKey): String = Base64.encodeToString(key.encoded, Base64.DEFAULT)
 
     private fun decodeStringToKey(encodedString: String): SecretKey {
         val encodedKey = Base64.decode(encodedString, Base64.DEFAULT)
@@ -310,9 +304,5 @@ internal object KeyStoreToolApi21 {
         }
 
         return publicKey
-    }
-
-    private fun getKey1(context: Context) {
-
     }
 }

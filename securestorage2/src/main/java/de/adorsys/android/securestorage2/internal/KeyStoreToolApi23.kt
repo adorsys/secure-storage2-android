@@ -103,11 +103,15 @@ internal object KeyStoreToolApi23 {
         value: String
     ): String {
 
-        val secretKey = if (!keyExists(keyStoreInstance)) {
+        val secretKey = (if (!keyExists(keyStoreInstance)) {
             generateKey()
         } else {
             getSecretKey(keyStoreInstance)
-        }
+        }) ?: throw SecureStorageException(
+            context.getString(R.string.message_key_does_not_exist),
+            null,
+            SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
+        )
 
         cipher.init(Cipher.ENCRYPT_MODE, secretKey)
         val bytes = cipher.doFinal(value.toByteArray())
@@ -124,7 +128,11 @@ internal object KeyStoreToolApi23 {
         value: String
     ): String {
 
-        val secretKey = getSecretKey(keyStoreInstance)
+        val secretKey = getSecretKey(keyStoreInstance) ?: throw SecureStorageException(
+            context.getString(R.string.message_key_does_not_exist),
+            null,
+            SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
+        )
 
         cipher.init(
             Cipher.DECRYPT_MODE, secretKey,
@@ -174,36 +182,28 @@ internal object KeyStoreToolApi23 {
     }
 
     @RequiresApi(23)
-    internal fun isKeyInsideSecureHardware(keyStoreInstance: KeyStore): Boolean {
-        return getKeyInfo(keyStoreInstance)?.isInsideSecureHardware ?: false
-    }
+    internal fun isKeyInsideSecureHardware(keyStoreInstance: KeyStore): Boolean =
+        getKeyInfo(keyStoreInstance)?.isInsideSecureHardware ?: false
 
     @RequiresApi(23)
-    private fun getKeyGenerator(): KeyGenerator {
-        return KeyGenerator
-            .getInstance(KeyProperties.KEY_ALGORITHM_AES, KEY_GENERATOR_PROVIDER)
-    }
+    private fun getKeyGenerator(): KeyGenerator = KeyGenerator
+        .getInstance(KeyProperties.KEY_ALGORITHM_AES, KEY_GENERATOR_PROVIDER)
 
     @RequiresApi(23)
-    private fun getSecretKey(keyStoreInstance: KeyStore): SecretKey {
-        val secretKeyEntry = keyStoreInstance
-            .getEntry(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null) as KeyStore.SecretKeyEntry
-
-        return secretKeyEntry.secretKey
-    }
+    private fun getSecretKey(keyStoreInstance: KeyStore): SecretKey? = (keyStoreInstance
+        .getEntry(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null) as? KeyStore.SecretKeyEntry)?.secretKey
 
     @RequiresApi(23)
     private fun getKeyInfo(keyStoreInstance: KeyStore): KeyInfo? {
         val secretKey = getSecretKey(keyStoreInstance)
 
-        val factory = SecretKeyFactory.getInstance(secretKey.algorithm, KEY_GENERATOR_PROVIDER)
-        var keyInfo: KeyInfo?
-        try {
-            keyInfo = factory.getKeySpec(secretKey, KeyInfo::class.java) as KeyInfo
+        val factory = SecretKeyFactory.getInstance(secretKey?.algorithm, KEY_GENERATOR_PROVIDER)
+
+        return try {
+            factory.getKeySpec(secretKey, KeyInfo::class.java) as KeyInfo
         } catch (e: InvalidKeySpecException) {
             // Not an Android KeyStore key.
-            keyInfo = null
+            null
         }
-        return keyInfo
     }
 }

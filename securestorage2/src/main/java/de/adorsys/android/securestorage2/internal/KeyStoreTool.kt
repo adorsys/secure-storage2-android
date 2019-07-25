@@ -48,82 +48,95 @@ internal object KeyStoreTool {
     }
 
     internal fun keyExists(context: Context): Boolean {
-        return if (apiVersionMAndAbove(context)) {
-            KeyStoreToolApi23.keyExists(getKeyStoreInstance())
-        } else {
-            KeyStoreToolApi21.keyExists(context, getKeyStoreInstance())
+        return when {
+            apiVersionMAndAbove(context) -> KeyStoreToolApi23.keyExists(getKeyStoreInstance())
+            else -> KeyStoreToolApi21.keyExists(context, getKeyStoreInstance())
         }
     }
 
     internal fun generateKey(context: Context) {
-        if (!keyExists(context)) {
-            if (isRTL(context)) {
-                Locale.setDefault(Locale.US)
-            }
-
-            if (apiVersionMAndAbove(context)) {
-                KeyStoreToolApi23.generateKey()
-            } else {
-                KeyStoreToolApi21.generateKey(context)
+        when {
+            !keyExists(context) -> {
+                when {
+                    isRTL(context) -> Locale.setDefault(Locale.US)
+                }
+                when {
+                    apiVersionMAndAbove(context) -> KeyStoreToolApi23.generateKey()
+                    else -> KeyStoreToolApi21.generateKey(context)
+                }
             }
         }
     }
 
     internal fun encryptValue(context: Context, key: String, value: String): String {
-        return if (apiVersionMAndAbove(context)) {
-            KeyStoreToolApi23.encryptValue(context, getKeyStoreInstance(), getCipher(context), key, value)
-        } else {
-            KeyStoreToolApi21.encryptValue(context, getKeyStoreInstance(), getCipher(context), key, value)
+        return when {
+            apiVersionMAndAbove(context) -> KeyStoreToolApi23.encryptValue(
+                context,
+                getKeyStoreInstance(),
+                getCipher(context),
+                key,
+                value
+            )
+            else -> KeyStoreToolApi21.encryptValue(context, getKeyStoreInstance(), getCipher(context), key, value)
         }
     }
 
     internal fun decryptValue(context: Context, key: String, value: String): String? {
-        return if (apiVersionMAndAbove(context)) {
-            KeyStoreToolApi23.decryptValue(context, getKeyStoreInstance(), getCipher(context), key, value)
-        } else {
-            KeyStoreToolApi21.decryptValue(context, getKeyStoreInstance(), getCipher(context), key, value)
+        return when {
+            apiVersionMAndAbove(context) -> KeyStoreToolApi23.decryptValue(
+                context,
+                getKeyStoreInstance(),
+                getCipher(context),
+                key,
+                value
+            )
+            else -> KeyStoreToolApi21.decryptValue(context, getKeyStoreInstance(), getCipher(context), key, value)
         }
     }
 
     internal fun deleteKey(context: Context) {
-        if (apiVersionMAndAbove(context)) {
-            KeyStoreToolApi23.deleteKey(context, getKeyStoreInstance())
-        } else {
-            KeyStoreToolApi21.deleteKey(context, getKeyStoreInstance())
+        when {
+            apiVersionMAndAbove(context) -> KeyStoreToolApi23.deleteKey(context, getKeyStoreInstance())
+            else -> KeyStoreToolApi21.deleteKey(context, getKeyStoreInstance())
         }
     }
 
-    internal fun deviceHasSecureHardwareSupport(context: Context): Boolean {
-        // Android uses the Fingerprint Hardware Abstraction Layer (HAL) to connect to a vendor-specific
-        // library and fingerprint hardware, e.g. a fingerprint sensor.
-        // A vendor-specific HAL implementation must use the communication protocol required by a TEE
-        // https://source.android.com/security/authentication/fingerprint-hal
-        return FingerprintManagerCompat.from(context).isHardwareDetected
-    }
+    // Android uses the Fingerprint Hardware Abstraction Layer (HAL) to connect to a vendor-specific
+    // library and fingerprint hardware, e.g. a fingerprint sensor.
+    // A vendor-specific HAL implementation must use the communication protocol required by a TEE
+    // https://source.android.com/security/authentication/fingerprint-hal
+    internal fun deviceHasSecureHardwareSupport(context: Context): Boolean =
+        FingerprintManagerCompat.from(context).isHardwareDetected
 
     @RequiresApi(23)
-    internal fun isKeyInsideSecureHardware(): Boolean {
-        return KeyStoreToolApi23.isKeyInsideSecureHardware(getKeyStoreInstance())
-    }
+    internal fun isKeyInsideSecureHardware(): Boolean =
+        KeyStoreToolApi23.isKeyInsideSecureHardware(getKeyStoreInstance())
 
     @SuppressLint("CommitPrefEdits")
     internal fun setInstallApiVersionFlag(context: Context, forceSet: Boolean = false) {
         val preferences = SecureStorage.getSharedPreferencesInstance(context)
 
-        if (forceSet) {
-            SecureStorage.getSharedPreferencesInstance(context).edit()
-                .putBoolean(KEY_INSTALLATION_API_VERSION_UNDER_M, true)
-                .execute(SecureStorageConfig.INSTANCE.ASYNC_OPERATION)
-            return
+        when {
+            forceSet -> {
+                SecureStorage.getSharedPreferencesInstance(context).edit()
+                    .putBoolean(KEY_INSTALLATION_API_VERSION_UNDER_M, true)
+                    .execute(SecureStorageConfig.INSTANCE.ASYNC_OPERATION)
+                return
+            }
+            else -> {
+                val installationApiVersionUnderM = preferences.contains(KEY_INSTALLATION_API_VERSION_UNDER_M)
+
+                when {
+                    Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+                            && !installationApiVersionUnderM -> SecureStorage.getSharedPreferencesInstance(
+                        context
+                    ).edit()
+                        .putBoolean(KEY_INSTALLATION_API_VERSION_UNDER_M, true)
+                        .execute(SecureStorageConfig.INSTANCE.ASYNC_OPERATION)
+                }
+            }
         }
 
-        val installationApiVersionUnderM = preferences.contains(KEY_INSTALLATION_API_VERSION_UNDER_M)
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M && !installationApiVersionUnderM) {
-            SecureStorage.getSharedPreferencesInstance(context).edit()
-                .putBoolean(KEY_INSTALLATION_API_VERSION_UNDER_M, true)
-                .execute(SecureStorageConfig.INSTANCE.ASYNC_OPERATION)
-        }
     }
 
     @Throws(SecureStorageException::class)
@@ -146,11 +159,10 @@ internal object KeyStoreTool {
     private fun getCipher(context: Context): Cipher {
         getKeyStoreInstance()
 
-        return if (apiVersionMAndAbove(context)) {
-            Cipher.getInstance(KEY_SYMMETRIC_TRANSFORMATION_ALGORITHM)
-        } else {
-            // https://stackoverflow.com/a/36394097/3392276
-            Cipher.getInstance(KEY_ASYMMETRIC_TRANSFORMATION_ALGORITHM)
+        return when {
+            apiVersionMAndAbove(context) -> Cipher.getInstance(KEY_SYMMETRIC_TRANSFORMATION_ALGORITHM)
+            else -> // https://stackoverflow.com/a/36394097/3392276
+                Cipher.getInstance(KEY_ASYMMETRIC_TRANSFORMATION_ALGORITHM)
         }
     }
 
@@ -160,7 +172,6 @@ internal object KeyStoreTool {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !installationApiVersionUnderM
     }
 
-    private fun isRTL(context: Context): Boolean {
-        return context.resources.configuration.layoutDirection == LAYOUT_DIRECTION_RTL
-    }
+    private fun isRTL(context: Context): Boolean =
+        context.resources.configuration.layoutDirection == LAYOUT_DIRECTION_RTL
 }

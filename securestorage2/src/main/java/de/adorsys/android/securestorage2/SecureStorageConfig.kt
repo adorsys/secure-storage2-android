@@ -44,10 +44,9 @@ enum class SecureStorageConfig {
         ASYNC_OPERATION = workWithDataAsynchronously
         EXPLICITLY_USE_SECURE_HARDWARE = useOnlyWithHardwareSupport
 
-        CAN_USE_LIBRARY = if (useOnlyWithHardwareSupport) {
-            KeyStoreTool.deviceHasSecureHardwareSupport(context)
-        } else {
-            true
+        CAN_USE_LIBRARY = when {
+            useOnlyWithHardwareSupport -> KeyStoreTool.deviceHasSecureHardwareSupport(context)
+            else -> true
         }
     }
 }

@@ -119,10 +119,9 @@ object SecureStorage {
 
         val decryptedValue = KeyStoreTool.decryptValue(applicationContext, key, encryptedValue)
 
-        return if (decryptedValue.isNullOrBlank()) {
-            defaultValue
-        } else {
-            decryptedValue
+        return when {
+            decryptedValue.isNullOrBlank() -> defaultValue
+            else -> decryptedValue
         }
     }
 
@@ -233,9 +232,8 @@ object SecureStorage {
             .execute(SecureStorageConfig.INSTANCE.ASYNC_OPERATION)
     }
 
-    private fun getSecureValue(context: Context, key: String): String? {
-        return getSharedPreferencesInstance(context).getString(key, null)
-    }
+    private fun getSecureValue(context: Context, key: String): String? =
+        getSharedPreferencesInstance(context).getString(key, null)
 
     private fun removeSecureValue(context: Context, key: String) {
         getSharedPreferencesInstance(context).edit().remove(key).execute(SecureStorageConfig.INSTANCE.ASYNC_OPERATION)
