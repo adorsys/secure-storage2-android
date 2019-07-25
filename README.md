@@ -11,3 +11,5 @@
 [![API](https://img.shields.io/badge/API-21%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=21)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) 
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
+
+In any case, SecureStorage 1 will not be deprecated even after SecureStorage 2 has its first stable release. Development will be continued also on SecureStorage 1 - there are only some things like Symmetric Encryption which we only support with SecureStorage 2
