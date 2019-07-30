@@ -245,23 +245,22 @@ internal object KeyStoreToolApi21 {
 
     @Throws(SecureStorageException::class)
     private fun getPrivateKey(keyStoreInstance: KeyStore): PrivateKey {
-        val privateKey: PrivateKey
-
         keyStoreInstance.getKey(SecureStorage.ENCRYPTION_KEY_ALIAS, null)
+
         try {
-            if (rsaKeyPairExists(keyStoreInstance)) {
-                privateKey = if (VERSION.SDK_INT >= VERSION_CODES.P) {
-                    // only for P and newer versions
-                    keyStoreInstance.getKey(SecureStorage.ENCRYPTION_KEY_ALIAS, null) as PrivateKey
-                } else {
-                    val privateKeyEntry = keyStoreInstance.getEntry(
-                        SecureStorage.ENCRYPTION_KEY_ALIAS,
-                        null
-                    ) as KeyStore.PrivateKeyEntry
-                    privateKeyEntry.privateKey
+            when {
+                rsaKeyPairExists(keyStoreInstance) -> return when {
+                    VERSION.SDK_INT >= VERSION_CODES.P -> // only for P and newer versions
+                        keyStoreInstance.getKey(SecureStorage.ENCRYPTION_KEY_ALIAS, null) as PrivateKey
+                    else -> {
+                        val privateKeyEntry = keyStoreInstance.getEntry(
+                            SecureStorage.ENCRYPTION_KEY_ALIAS,
+                            null
+                        ) as KeyStore.PrivateKeyEntry
+                        privateKeyEntry.privateKey
+                    }
                 }
-            } else {
-                throw SecureStorageException(
+                else -> throw SecureStorageException(
                     SecureStorageException.MESSAGE_KEYPAIR_DOES_NOT_EXIST,
                     null,
                     SecureStorageException.ExceptionType.INTERNAL_LIBRARY_EXCEPTION
@@ -274,27 +273,24 @@ internal object KeyStoreToolApi21 {
                 SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
             )
         }
-
-        return privateKey
     }
 
     @Throws(SecureStorageException::class)
     private fun getPublicKey(keyStoreInstance: KeyStore): PublicKey {
-        val publicKey: PublicKey
         try {
-            if (rsaKeyPairExists(keyStoreInstance)) {
-                publicKey = if (VERSION.SDK_INT >= VERSION_CODES.P) {
-                    // only for P and newer versions
-                    keyStoreInstance.getCertificate(SecureStorage.ENCRYPTION_KEY_ALIAS).publicKey
-                } else {
-                    val privateKeyEntry = keyStoreInstance.getEntry(
-                        SecureStorage.ENCRYPTION_KEY_ALIAS,
-                        null
-                    ) as KeyStore.PrivateKeyEntry
-                    privateKeyEntry.certificate.publicKey
+            when {
+                rsaKeyPairExists(keyStoreInstance) -> return when {
+                    VERSION.SDK_INT >= VERSION_CODES.P -> // only for P and newer versions
+                        keyStoreInstance.getCertificate(SecureStorage.ENCRYPTION_KEY_ALIAS).publicKey
+                    else -> {
+                        val privateKeyEntry = keyStoreInstance.getEntry(
+                            SecureStorage.ENCRYPTION_KEY_ALIAS,
+                            null
+                        ) as KeyStore.PrivateKeyEntry
+                        privateKeyEntry.certificate.publicKey
+                    }
                 }
-            } else {
-                throw SecureStorageException(
+                else -> throw SecureStorageException(
                     SecureStorageException.MESSAGE_KEYPAIR_DOES_NOT_EXIST,
                     null,
                     SecureStorageException.ExceptionType.INTERNAL_LIBRARY_EXCEPTION
@@ -307,6 +303,5 @@ internal object KeyStoreToolApi21 {
                 SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
             )
         }
-        return publicKey
     }
 }
