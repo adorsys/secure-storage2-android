@@ -11,8 +11,7 @@ class App : Application() {
             context = applicationContext,
             encryptionKeyAlias = "SecureStorage2Key",
             x500Principal = "CN=SecureStorage2 Sample App, O=Adorsys GmbH & Co. KG., C=Germany",
-            useOnlyWithHardwareSupport = false,
-            workWithDataAsynchronously = true
+            useOnlyWithHardwareSupport = false
         )
     }
 }
