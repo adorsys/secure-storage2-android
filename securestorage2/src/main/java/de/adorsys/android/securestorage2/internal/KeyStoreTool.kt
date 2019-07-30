@@ -24,7 +24,6 @@ import androidx.core.hardware.fingerprint.FingerprintManagerCompat
 import android.view.View.LAYOUT_DIRECTION_RTL
 import de.adorsys.android.securestorage2.SecureStorage
 import de.adorsys.android.securestorage2.SecureStorage.KEY_INSTALLATION_API_VERSION_UNDER_M
-import de.adorsys.android.securestorage2.SecureStorageConfig
 import de.adorsys.android.securestorage2.SecureStorageException
 import de.adorsys.android.securestorage2.execute
 import de.adorsys.android.securestorage2.SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
@@ -96,7 +95,7 @@ internal object KeyStoreTool {
 
     internal fun deleteKey(context: Context) {
         when {
-            apiVersionMAndAbove(context) -> KeyStoreToolApi23.deleteKey(context, getKeyStoreInstance())
+            apiVersionMAndAbove(context) -> KeyStoreToolApi23.deleteKey(getKeyStoreInstance())
             else -> KeyStoreToolApi21.deleteKey(context, getKeyStoreInstance())
         }
     }
@@ -119,8 +118,7 @@ internal object KeyStoreTool {
         when {
             forceSet -> {
                 SecureStorage.getSharedPreferencesInstance(context).edit()
-                    .putBoolean(KEY_INSTALLATION_API_VERSION_UNDER_M, true)
-                    .execute(SecureStorageConfig.INSTANCE.ASYNC_OPERATION)
+                    .putBoolean(KEY_INSTALLATION_API_VERSION_UNDER_M, true).execute()
                 return
             }
             else -> {
@@ -131,8 +129,7 @@ internal object KeyStoreTool {
                             && !installationApiVersionUnderM -> SecureStorage.getSharedPreferencesInstance(
                         context
                     ).edit()
-                        .putBoolean(KEY_INSTALLATION_API_VERSION_UNDER_M, true)
-                        .execute(SecureStorageConfig.INSTANCE.ASYNC_OPERATION)
+                        .putBoolean(KEY_INSTALLATION_API_VERSION_UNDER_M, true).execute()
                 }
             }
         }
@@ -151,7 +148,11 @@ internal object KeyStoreTool {
 
             return keyStore
         } catch (e: Exception) {
-            throw SecureStorageException(e.message!!, e, KEYSTORE_EXCEPTION)
+            throw SecureStorageException(
+                if (e.message != null) e.message!! else SecureStorageException.MESSAGE_ERROR_WHILE_GETTING_KEYSTORE_INSTANCE,
+                e,
+                KEYSTORE_EXCEPTION
+            )
         }
     }
 

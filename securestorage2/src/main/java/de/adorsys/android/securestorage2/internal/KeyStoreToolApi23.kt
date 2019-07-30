@@ -18,8 +18,6 @@ package de.adorsys.android.securestorage2.internal
 
 import android.content.Context
 import android.os.Build
-import de.adorsys.android.securestorage2.R
-import de.adorsys.android.securestorage2.SecureStorageConfig
 import java.security.KeyStore
 import java.security.KeyStoreException
 import android.security.keystore.KeyProperties
@@ -27,6 +25,7 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyInfo
 import androidx.annotation.RequiresApi
 import android.util.Base64
+import de.adorsys.android.securestorage2.SecureStorage
 import de.adorsys.android.securestorage2.SecureStorageException
 import java.security.spec.InvalidKeySpecException
 import java.util.*
@@ -49,10 +48,10 @@ internal object KeyStoreToolApi23 {
     @Throws(SecureStorageException::class)
     internal fun keyExists(keyStoreInstance: KeyStore): Boolean {
         try {
-            return keyStoreInstance.getKey(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null) != null
+            return keyStoreInstance.getKey(SecureStorage.ENCRYPTION_KEY_ALIAS, null) != null
         } catch (e: Exception) {
             throw SecureStorageException(
-                e.message!!,
+                if (e.message != null) e.message!! else SecureStorageException.MESSAGE_ERROR_WHILE_RETRIEVING_KEY,
                 e,
                 SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
             )
@@ -69,18 +68,18 @@ internal object KeyStoreToolApi23 {
         val keyGenParameterSpecBuilder =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 KeyGenParameterSpec.Builder(
-                    SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS,
+                    SecureStorage.ENCRYPTION_KEY_ALIAS,
                     KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
                 )
                     .setKeyValidityStart(keyStartDate.time)
                     .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
                     .setKeySize(256)
-                    .setIsStrongBoxBacked(SecureStorageConfig.INSTANCE.EXPLICITLY_USE_SECURE_HARDWARE)
-                    .setUserConfirmationRequired(SecureStorageConfig.INSTANCE.EXPLICITLY_USE_SECURE_HARDWARE)
+                    .setIsStrongBoxBacked(SecureStorage.EXPLICITLY_USE_SECURE_HARDWARE)
+                    .setUserConfirmationRequired(SecureStorage.EXPLICITLY_USE_SECURE_HARDWARE)
             } else {
                 KeyGenParameterSpec.Builder(
-                    SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS,
+                    SecureStorage.ENCRYPTION_KEY_ALIAS,
                     KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
                 )
                     .setKeyValidityStart(keyStartDate.time)
@@ -108,7 +107,7 @@ internal object KeyStoreToolApi23 {
         } else {
             getSecretKey(keyStoreInstance)
         }) ?: throw SecureStorageException(
-            context.getString(R.string.message_key_does_not_exist),
+            SecureStorageException.MESSAGE_KEY_DOES_NOT_EXIST,
             null,
             SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
         )
@@ -129,7 +128,7 @@ internal object KeyStoreToolApi23 {
     ): String {
 
         val secretKey = getSecretKey(keyStoreInstance) ?: throw SecureStorageException(
-            context.getString(R.string.message_key_does_not_exist),
+            SecureStorageException.MESSAGE_KEY_DOES_NOT_EXIST,
             null,
             SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
         )
@@ -144,21 +143,21 @@ internal object KeyStoreToolApi23 {
     }
 
     @RequiresApi(23)
-    internal fun deleteKey(context: Context, keyStoreInstance: KeyStore) {
+    internal fun deleteKey(keyStoreInstance: KeyStore) {
         // Delete Key from Keystore
         if (keyExists(keyStoreInstance)) {
             try {
-                keyStoreInstance.deleteEntry(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS)
+                keyStoreInstance.deleteEntry(SecureStorage.ENCRYPTION_KEY_ALIAS)
             } catch (e: KeyStoreException) {
                 throw SecureStorageException(
-                    e.message!!,
+                    if (e.message != null) e.message!! else SecureStorageException.MESSAGE_ERROR_WHILE_DELETING_KEY,
                     e,
                     SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
                 )
             }
         } else {
             throw SecureStorageException(
-                context.getString(R.string.message_key_does_not_exist),
+                SecureStorageException.MESSAGE_KEY_DOES_NOT_EXIST,
                 null,
                 SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
             )
@@ -168,7 +167,7 @@ internal object KeyStoreToolApi23 {
     @RequiresApi(23)
     private fun saveIVInSecureStorage(context: Context, key: String, iv: ByteArray) {
         val preferences =
-            context.getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            context.getSharedPreferences(SecureStorage.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
         val encodedIv = Base64.encodeToString(iv, Base64.DEFAULT)
         preferences.edit().putString("$KEY_CIPHER_IV$key", encodedIv).apply()
     }
@@ -176,7 +175,7 @@ internal object KeyStoreToolApi23 {
     @RequiresApi(23)
     private fun getIVFromSecureStorage(context: Context, key: String): ByteArray {
         val preferences =
-            context.getSharedPreferences(SecureStorageConfig.INSTANCE.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            context.getSharedPreferences(SecureStorage.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
         val encodedIv = preferences.getString("$KEY_CIPHER_IV$key", null)
         return Base64.decode(encodedIv, Base64.DEFAULT)
     }
@@ -191,7 +190,7 @@ internal object KeyStoreToolApi23 {
 
     @RequiresApi(23)
     private fun getSecretKey(keyStoreInstance: KeyStore): SecretKey? = (keyStoreInstance
-        .getEntry(SecureStorageConfig.INSTANCE.ENCRYPTION_KEY_ALIAS, null) as? KeyStore.SecretKeyEntry)?.secretKey
+        .getEntry(SecureStorage.ENCRYPTION_KEY_ALIAS, null) as? KeyStore.SecretKeyEntry)?.secretKey
 
     @RequiresApi(23)
     private fun getKeyInfo(keyStoreInstance: KeyStore): KeyInfo? {

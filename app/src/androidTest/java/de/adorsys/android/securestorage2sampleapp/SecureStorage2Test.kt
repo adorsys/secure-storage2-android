@@ -11,7 +11,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.ActivityTestRule
 import de.adorsys.android.securestorage2.SecureStorage
-import de.adorsys.android.securestorage2.SecureStorageConfig
 import de.adorsys.android.securestorage2.SecureStorageException
 import org.junit.Assert.*
 import org.junit.Before
@@ -33,15 +32,13 @@ open class SecureStorage2Test {
     @Before
     @Throws(SecureStorageException::class)
     fun setUp() {
-        SecureStorageConfig.INSTANCE.initializeSecureStorageConfig(
+        SecureStorage.init(
             context = activityRule.activity.applicationContext,
             encryptionKeyAlias = "SecureStorage2Key",
             x500Principal = "CN=SecureStorage2 Sample App, O=Adorsys GmbH & Co. KG., C=Germany",
             useOnlyWithHardwareSupport = false,
             workWithDataAsynchronously = true
         )
-
-        SecureStorage.initSecureStorageKeys(activityRule.activity)
     }
 
     @Test

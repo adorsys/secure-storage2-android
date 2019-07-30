@@ -40,4 +40,16 @@ class SecureStorageException(detailMessage: String, cause: Throwable?, val type:
          */
         INTERNAL_LIBRARY_EXCEPTION
     }
+
+    companion object{
+        const val MESSAGE_KEY_DOES_NOT_EXIST = "Key does not exist"
+        const val MESSAGE_KEYPAIR_DOES_NOT_EXIST = "Keypair does not exist"
+        const val MESSAGE_ERROR_WHILE_DELETING_KEY = "Error occurred while trying to delete key"
+        const val MESSAGE_ERROR_WHILE_DELETING_KEYPAIR = "Error occurred while trying to delete keypair"
+        const val MESSAGE_ERROR_WHILE_RETRIEVING_KEY = "Error while retrieving key"
+        const val MESSAGE_ERROR_WHILE_RETRIEVING_KEYPAIR = "Error while retrieving keypair"
+        const val MESSAGE_ERROR_WHILE_RETRIEVING_PRIVATE_KEY = "Error while retrieving private key"
+        const val MESSAGE_ERROR_WHILE_RETRIEVING_PUBLIC_KEY = "Error while retrieving public key"
+        const val MESSAGE_ERROR_WHILE_GETTING_KEYSTORE_INSTANCE = "Error while getting keystore instance"
+    }
 }
