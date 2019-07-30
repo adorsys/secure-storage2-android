@@ -20,6 +20,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.annotation.RequiresApi
 import de.adorsys.android.securestorage2.internal.KeyStoreTool
 import java.lang.Boolean.parseBoolean
@@ -46,7 +47,7 @@ object SecureStorage {
     ) {
         SHARED_PREFERENCES_NAME = context.packageName + ".SecureStorage2"
         ENCRYPTION_KEY_ALIAS = encryptionKeyAlias ?: "SecureStorage2Key"
-        X500PRINCIPAL = x500Principal ?: "CN=SecureStorage2 Sample App, O=Adorsys GmbH & Co. KG., C=USA"
+        X500PRINCIPAL = x500Principal ?: "CN=SecureStorage2 , O=Adorsys GmbH & Co. KG., C=Germany"
         EXPLICITLY_USE_SECURE_HARDWARE = useOnlyWithHardwareSupport
 
         CAN_USE_LIBRARY = when {
@@ -66,7 +67,7 @@ object SecureStorage {
         return KeyStoreTool.deviceHasSecureHardwareSupport(applicationContext)
     }
 
-    @RequiresApi(23)
+    @RequiresApi(Build.VERSION_CODES.M)
     @Throws(SecureStorageException::class)
     fun isKeyInsideSecureHardware() {
         checkAppCanUseLibrary()

@@ -22,12 +22,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.security.KeyPairGeneratorSpec
 import android.util.Base64
-import de.adorsys.android.securestorage2.*
-import de.adorsys.android.securestorage2.execute
 import de.adorsys.android.securestorage2.internal.AesCbcWithIntegrity.SecretKeys
 import java.math.BigInteger
-import java.security.*
-import java.util.*
 import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
@@ -35,6 +31,15 @@ import javax.security.auth.x500.X500Principal
 import de.adorsys.android.securestorage2.SecureStorageException
 import android.os.Build.VERSION_CODES
 import android.os.Build.VERSION
+import de.adorsys.android.securestorage2.SecureStorage
+import de.adorsys.android.securestorage2.execute
+import java.security.KeyStore
+import java.security.KeyStoreException
+import java.security.KeyPairGenerator
+import java.security.KeyPair
+import java.security.PrivateKey
+import java.security.PublicKey
+import java.util.Calendar
 
 @SuppressLint("CommitPrefEdits")
 internal object KeyStoreToolApi21 {
@@ -43,6 +48,7 @@ internal object KeyStoreToolApi21 {
     // SecureStorage KeyStoreTool API >= 21 && API < 23 Logic
     //================================================================================
 
+    private const val RSA_KEY_PAIR_VALIDITY_IN_YEARS = 99
     private const val KEY_PAIR_GENERATOR_PROVIDER = "AndroidKeyStore"
     private const val RSA_ALGORITHM = "RSA"
     private const val AES_ALGORITHM = "RSA"
@@ -68,7 +74,8 @@ internal object KeyStoreToolApi21 {
                 keyStoreInstance.deleteEntry(SecureStorage.ENCRYPTION_KEY_ALIAS)
             } catch (e: KeyStoreException) {
                 throw SecureStorageException(
-                    if (e.message != null) e.message!! else SecureStorageException.MESSAGE_ERROR_WHILE_DELETING_KEYPAIR,
+                    if (!e.message.isNullOrBlank()) e.message!!
+                    else SecureStorageException.MESSAGE_ERROR_WHILE_DELETING_KEYPAIR,
                     e,
                     SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
                 )
@@ -124,7 +131,8 @@ internal object KeyStoreToolApi21 {
             }
         } catch (e: Exception) {
             throw SecureStorageException(
-                if (e.message != null) e.message!! else SecureStorageException.MESSAGE_ERROR_WHILE_RETRIEVING_KEYPAIR,
+                if (!e.message.isNullOrBlank()) e.message!!
+                else SecureStorageException.MESSAGE_ERROR_WHILE_RETRIEVING_KEYPAIR,
                 e,
                 SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
             )
@@ -138,11 +146,10 @@ internal object KeyStoreToolApi21 {
 
     private fun generateRsaKey(context: Context): KeyPair? {
         val keyPairGenerator = getKeyPairGenerator()
-
         val keyStartDate = Calendar.getInstance()
         keyStartDate.add(Calendar.DAY_OF_MONTH, -1)
         val keyEndDate = Calendar.getInstance()
-        keyEndDate.add(Calendar.YEAR, 99)
+        keyEndDate.add(Calendar.YEAR, RSA_KEY_PAIR_VALIDITY_IN_YEARS)
 
         val keyPairGeneratorSpecBuilder = KeyPairGeneratorSpec.Builder(context)
             .setAlias(SecureStorage.ENCRYPTION_KEY_ALIAS)
@@ -232,8 +239,18 @@ internal object KeyStoreToolApi21 {
         return SecretKeySpec(encodedKey, 0, encodedKey.size, AES_ALGORITHM)
     }
 
-    private fun getAesKey(context: Context, keyStoreInstance: KeyStore, cipher: Cipher, keyPrefix: String): SecretKeys {
-        val encodedIntegrityKey = getAesKeyPart(context, keyStoreInstance, cipher, keyPrefix + KEY_AES_INTEGRITY_KEY)
+    private fun getAesKey(
+        context: Context,
+        keyStoreInstance: KeyStore,
+        cipher: Cipher,
+        keyPrefix: String
+    ): SecretKeys {
+        val encodedIntegrityKey = getAesKeyPart(
+            context,
+            keyStoreInstance,
+            cipher,
+            keyPrefix + KEY_AES_INTEGRITY_KEY
+        )
         val encodedConfidentialityKey =
             getAesKeyPart(context, keyStoreInstance, cipher, keyPrefix + KEY_AES_CONFIDENTIALITY_KEY)
 
@@ -268,7 +285,8 @@ internal object KeyStoreToolApi21 {
             }
         } catch (e: Exception) {
             throw SecureStorageException(
-                if (e.message != null) e.message!! else SecureStorageException.MESSAGE_ERROR_WHILE_RETRIEVING_PRIVATE_KEY,
+                if (!e.message.isNullOrBlank()) e.message!!
+                else SecureStorageException.MESSAGE_ERROR_WHILE_RETRIEVING_PRIVATE_KEY,
                 e,
                 SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
             )
@@ -298,7 +316,8 @@ internal object KeyStoreToolApi21 {
             }
         } catch (e: Exception) {
             throw SecureStorageException(
-                if (e.message != null) e.message!! else SecureStorageException.MESSAGE_ERROR_WHILE_RETRIEVING_PUBLIC_KEY,
+                if (!e.message.isNullOrBlank()) e.message!!
+                else SecureStorageException.MESSAGE_ERROR_WHILE_RETRIEVING_PUBLIC_KEY,
                 e,
                 SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
             )

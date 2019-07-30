@@ -107,7 +107,7 @@ internal object KeyStoreTool {
     internal fun deviceHasSecureHardwareSupport(context: Context): Boolean =
         FingerprintManagerCompat.from(context).isHardwareDetected
 
-    @RequiresApi(23)
+    @RequiresApi(Build.VERSION_CODES.M)
     internal fun isKeyInsideSecureHardware(): Boolean =
         KeyStoreToolApi23.isKeyInsideSecureHardware(getKeyStoreInstance())
 
@@ -133,7 +133,6 @@ internal object KeyStoreTool {
                 }
             }
         }
-
     }
 
     @Throws(SecureStorageException::class)
@@ -149,7 +148,8 @@ internal object KeyStoreTool {
             return keyStore
         } catch (e: Exception) {
             throw SecureStorageException(
-                if (e.message != null) e.message!! else SecureStorageException.MESSAGE_ERROR_WHILE_GETTING_KEYSTORE_INSTANCE,
+                if (!e.message.isNullOrBlank()) e.message!!
+                else SecureStorageException.MESSAGE_ERROR_WHILE_GETTING_KEYSTORE_INSTANCE,
                 e,
                 KEYSTORE_EXCEPTION
             )

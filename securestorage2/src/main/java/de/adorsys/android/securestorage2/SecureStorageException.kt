@@ -32,7 +32,8 @@ class SecureStorageException(detailMessage: String, cause: Throwable?, val type:
          */
         CRYPTO_EXCEPTION,
         /**
-         * If this exception type is set it means simply that the keystore cannot be used on the current device as it is not supported by this library.
+         * If this exception type is set it means simply that the keystore
+         * cannot be used on the current device as it is not supported by this library.
          */
         KEYSTORE_NOT_SUPPORTED_EXCEPTION,
         /**

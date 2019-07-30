@@ -10,7 +10,7 @@ class App : Application() {
         SecureStorage.init(
             context = applicationContext,
             encryptionKeyAlias = "SecureStorage2Key",
-            x500Principal = "CN=SecureStorage2 Sample App, O=Adorsys GmbH & Co. KG., C=Germany",
+            x500Principal = "CN=SecureStorage2 , O=Adorsys GmbH & Co. KG., C=Germany",
             useOnlyWithHardwareSupport = false
         )
     }
