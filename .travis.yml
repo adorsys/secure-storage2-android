@@ -7,6 +7,7 @@ jdk:
 
 script:
   - ./gradlew clean check --parallel
+  - ./gradlew detekt
 
 before_install:
   # Install SDK license so Android Gradle plugin can install deps.
