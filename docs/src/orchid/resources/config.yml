@@ -12,8 +12,8 @@ Editorial:
       itemId: 'Changelog'
     - type: 'separator'
       title: 'API Docs'
-    - type: 'kotlindocPackages'
     - type: 'kotlindocClasses'
+    - type: 'kotlindocPackages'
 
 kotlindoc:
   sourceDirs:

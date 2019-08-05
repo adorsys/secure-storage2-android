@@ -39,34 +39,54 @@ object SecureStorage {
 
     private var CAN_USE_LIBRARY = true
 
+    /**
+     * Initialize the library with desired options
+     *
+     * @param context Context is used internally for initializing keys
+     * @param encryptionKeyAlias Alias for the encryption key/keypair (default value: SecureStorage2Key)
+     * @param x500Principal Distinguished Name used for generating KeyPair for asymmetric en/decryption (default value: CN=SecureStorage2 , O=Adorsys GmbH & Co. KG., C=Germany)
+     * @param useOnlyWithHardwareSupport If this parameter is true the library will only work on devices that have a TEE or SE otherwise it'ss throw an exception
+     */
     fun init(
         context: Context,
         encryptionKeyAlias: String? = null,
         x500Principal: String? = null,
         useOnlyWithHardwareSupport: Boolean = false
     ) {
-        SHARED_PREFERENCES_NAME = context.packageName + ".SecureStorage2"
+        SHARED_PREFERENCES_NAME = context.applicationContext.packageName + ".SecureStorage2"
         ENCRYPTION_KEY_ALIAS = encryptionKeyAlias ?: "SecureStorage2Key"
         X500PRINCIPAL = x500Principal ?: "CN=SecureStorage2 , O=Adorsys GmbH & Co. KG., C=Germany"
         EXPLICITLY_USE_SECURE_HARDWARE = useOnlyWithHardwareSupport
 
         CAN_USE_LIBRARY = when {
-            useOnlyWithHardwareSupport -> KeyStoreTool.deviceHasSecureHardwareSupport(context)
+            useOnlyWithHardwareSupport -> KeyStoreTool.deviceHasSecureHardwareSupport(context.applicationContext)
             else -> true
         }
 
-        initSecureStorageKeys(context)
+        initSecureStorageKeys(context.applicationContext)
     }
 
+    /**
+     *
+     * Checks if the device has secure hardware support (TEE or SE) for storing the Android Keystore keys
+     *
+     * @param context Context is used internally
+     *
+     * @return True if device has secure hardware support (TEE or SE), otherwise false
+     *
+     */
     @Throws(SecureStorageException::class)
     fun deviceHasSecureHardwareSupport(context: Context): Boolean {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        return KeyStoreTool.deviceHasSecureHardwareSupport(applicationContext)
+        return KeyStoreTool.deviceHasSecureHardwareSupport(context.applicationContext)
     }
 
+    /**
+     *
+     * Checks if the keys are stored in secure hardware (TEE or SE)
+     *
+     */
     @RequiresApi(Build.VERSION_CODES.M)
     @Throws(SecureStorageException::class)
     fun isKeyInsideSecureHardware() {
@@ -75,62 +95,101 @@ object SecureStorage {
         KeyStoreTool.isKeyInsideSecureHardware()
     }
 
+    /**
+     *
+     * Takes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device
+     *
+     * @param context Context is used internally
+     * @param key Key used to identify the stored value in SecureStorage
+     * @param value Plain String value that will be encrypted and stored in the SecureStorage
+     *
+     */
     @Throws(SecureStorageException::class)
     fun putString(context: Context, key: String, value: String) {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        if (!KeyStoreTool.keyExists(applicationContext)) {
-            KeyStoreTool.generateKey(applicationContext)
+        if (!KeyStoreTool.keyExists(context.applicationContext)) {
+            KeyStoreTool.generateKey(context.applicationContext)
         }
 
-        val encryptedValue = KeyStoreTool.encryptValue(applicationContext, key, value)
+        val encryptedValue = KeyStoreTool.encryptValue(context.applicationContext, key, value)
 
-        putSecureValue(applicationContext, key, encryptedValue)
+        putSecureValue(context.applicationContext, key, encryptedValue)
     }
 
+    /**
+     *
+     * Takes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device
+     *
+     * @param context Context is used internally
+     * @param key Key used to identify the stored value in SecureStorage
+     * @param value Plain boolean value that will be encrypted and stored in the SecureStorage
+     *
+     */
     @Throws(SecureStorageException::class)
-    fun putBoolean(context: Context, key: String, value: Boolean) {
-        val applicationContext = context.applicationContext
+    fun putBoolean(context: Context, key: String, value: Boolean) =
+        putString(context.applicationContext, key, value.toString())
 
-        putString(applicationContext, key, value.toString())
-    }
-
+    /**
+     *
+     * Takes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device
+     *
+     * @param context Context is used internally
+     * @param key Key used to identify the stored value in SecureStorage
+     * @param value Plain float value that will be encrypted and stored in the SecureStorage
+     *
+     */
     @Throws(SecureStorageException::class)
-    fun putFloat(context: Context, key: String, value: Float) {
-        val applicationContext = context.applicationContext
+    fun putFloat(context: Context, key: String, value: Float) =
+        putString(context.applicationContext, key, value.toString())
 
-        putString(applicationContext, key, value.toString())
-    }
-
+    /**
+     *
+     * Takes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device
+     *
+     * @param context Context is used internally
+     * @param key Key used to identify the stored value in SecureStorage
+     * @param value Plain long value that will be encrypted and stored in the SecureStorage
+     *
+     */
     @Throws(SecureStorageException::class)
-    fun putLong(context: Context, key: String, value: Long) {
-        val applicationContext = context.applicationContext
+    fun putLong(context: Context, key: String, value: Long) =
+        putString(context.applicationContext, key, value.toString())
 
-        putString(applicationContext, key, value.toString())
-    }
-
+    /**
+     *
+     * Takes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device
+     *
+     * @param context Context is used internally
+     * @param key Key used to identify the stored value in SecureStorage
+     * @param value Plain int value that will be encrypted and stored in the SecureStorage
+     *
+     */
     @Throws(SecureStorageException::class)
-    fun putInt(context: Context, key: String, value: Int) {
-        val applicationContext = context.applicationContext
+    fun putInt(context: Context, key: String, value: Int) = putString(context.applicationContext, key, value.toString())
 
-        putString(applicationContext, key, value.toString())
-    }
-
+    /**
+     *
+     * Gets encrypted String value for given key from the SecureStorage on the Android Device, decrypts it and returns it
+     *
+     * @param context Context is used internally
+     * @param key Key used to identify the stored value in SecureStorage
+     * @param defaultValue Default String value that will be returned if the value with given key doesn't exist or an exception is thrown
+     *
+     * @return Decrypted String value associated with given key from SecureStorage
+     *
+     */
     @Throws(SecureStorageException::class)
     fun getString(context: Context, key: String, defaultValue: String): String {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        val encryptedValue = getSecureValue(applicationContext, key)
+        val encryptedValue = getSecureValue(context.applicationContext, key)
 
         if (encryptedValue.isNullOrBlank()) {
             return defaultValue
         }
 
-        val decryptedValue = KeyStoreTool.decryptValue(applicationContext, key, encryptedValue)
+        val decryptedValue = KeyStoreTool.decryptValue(context.applicationContext, key, encryptedValue)
 
         return when {
             decryptedValue.isNullOrBlank() -> defaultValue
@@ -138,103 +197,170 @@ object SecureStorage {
         }
     }
 
-    fun getBoolean(context: Context, key: String, defaultValue: Boolean): Boolean {
-        val applicationContext = context.applicationContext
+    /**
+     *
+     * Gets encrypted boolean value for given key from the SecureStorage on the Android Device, decrypts it and returns it
+     *
+     * @param context Context is used internally
+     * @param key Key used to identify the stored value in SecureStorage
+     * @param defaultValue Default boolean value that will be returned if the value with given key doesn't exist or an exception is thrown
+     *
+     * @return Decrypted boolean value associated with given key from SecureStorage
+     *
+     */
+    fun getBoolean(context: Context, key: String, defaultValue: Boolean): Boolean =
+        parseBoolean(getString(context.applicationContext, key, defaultValue.toString()))
 
-        return parseBoolean(getString(applicationContext, key, defaultValue.toString()))
-    }
+    /**
+     *
+     * Gets encrypted float value for given key from the SecureStorage on the Android Device, decrypts it and returns it
+     *
+     * @param context Context is used internally
+     * @param key Key used to identify the stored value in SecureStorage
+     * @param defaultValue Default float value that will be returned if the value with given key doesn't exist or an exception is thrown
+     *
+     * @return Decrypted float value associated with given key from SecureStorage
+     *
+     */
+    fun getFloat(context: Context, key: String, defaultValue: Float): Float =
+        parseFloat(getString(context.applicationContext, key, defaultValue.toString()))
 
-    fun getFloat(context: Context, key: String, defaultValue: Float): Float {
-        val applicationContext = context.applicationContext
+    /**
+     *
+     * Gets encrypted long value for given key from the SecureStorage on the Android Device, decrypts it and returns it
+     *
+     * @param context Context is used internally
+     * @param key Key used to identify the stored value in SecureStorage
+     * @param defaultValue Default long value that will be returned if the value with given key doesn't exist or an exception is thrown
+     *
+     * @return Decrypted long value associated with given key from SecureStorage
+     *
+     */
+    fun getLong(context: Context, key: String, defaultValue: Long): Long =
+        parseLong(getString(context.applicationContext, key, defaultValue.toString()))
 
-        return parseFloat(getString(applicationContext, key, defaultValue.toString()))
-    }
+    /**
+     *
+     * Gets encrypted int value for given key  from the SecureStorage on the Android Device, decrypts it and returns it
+     *
+     * @param context Context is used internally
+     * @param key Key used to identify the stored value in SecureStorage
+     * @param defaultValue Default int value that will be returned if the value with given key doesn't exist or an exception is thrown
+     *
+     * @return Decrypted int value associated with given key from SecureStorage
+     *
+     */
+    fun getInt(context: Context, key: String, defaultValue: Int): Int =
+        parseInt(getString(context.applicationContext, key, defaultValue.toString()))
 
-    fun getLong(context: Context, key: String, defaultValue: Long): Long {
-        val applicationContext = context.applicationContext
-
-        return parseLong(getString(applicationContext, key, defaultValue.toString()))
-    }
-
-    fun getInt(context: Context, key: String, defaultValue: Int): Int {
-        val applicationContext = context.applicationContext
-
-        return parseInt(getString(applicationContext, key, defaultValue.toString()))
-    }
-
+    /**
+     *
+     * Checks if SecureStorage contains a value for the given key (Does not return the value or check what type it is)
+     *
+     * @param context Context is used internally
+     * @param key Key used to identify the stored value in SecureStorage
+     *
+     * @return True if value exists in SecureStorage, otherwise false
+     *
+     */
     @Throws(SecureStorageException::class)
     fun contains(context: Context, key: String): Boolean {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        return getSharedPreferencesInstance(applicationContext).contains(key)
+        return getSharedPreferencesInstance(context.applicationContext).contains(key)
     }
 
+    /**
+     *
+     * Removes the value for a given key from SecureStorage
+     *
+     * @param context Context is used internally
+     * @param key Key used to identify the stored value in SecureStorage
+     *
+     */
     @Throws(SecureStorageException::class)
     fun remove(context: Context, key: String) {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        removeSecureValue(applicationContext, key)
+        removeSecureValue(context.applicationContext, key)
     }
 
+    /**
+     *
+     * Clears all values from the SecureStorage on the Android Device
+     *
+     * @param context Context is used internally
+     *
+     */
     @Throws(SecureStorageException::class)
     fun clearAllValues(context: Context) {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        val apiVersionUnderMExisted = contains(applicationContext, KEY_INSTALLATION_API_VERSION_UNDER_M)
+        val apiVersionUnderMExisted = contains(context.applicationContext, KEY_INSTALLATION_API_VERSION_UNDER_M)
 
-        clearAllSecureValues(applicationContext)
+        clearAllSecureValues(context.applicationContext)
 
         if (apiVersionUnderMExisted) {
-            KeyStoreTool.setInstallApiVersionFlag(applicationContext, true)
+            KeyStoreTool.setInstallApiVersionFlag(context.applicationContext, true)
         }
     }
 
+    /**
+     *
+     * Clears all values from the SecureStorage on the Android Device and deletes the en/decryption keys
+     * Means new keys/keypairs have to be generated for the library to be able to work
+     *
+     * @param context Context is used internally
+     *
+     */
     @Throws(SecureStorageException::class)
     fun clearAllValuesAndDeleteKeys(context: Context) {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        if (KeyStoreTool.keyExists(applicationContext)) {
-            KeyStoreTool.deleteKey(applicationContext)
+        if (KeyStoreTool.keyExists(context.applicationContext)) {
+            KeyStoreTool.deleteKey(context.applicationContext)
         }
-        clearAllSecureValues(applicationContext)
+        clearAllSecureValues(context.applicationContext)
     }
 
+    /**
+     *
+     * Registers SecureStorageChangeListener to listen to any changes in SecureStorage
+     *
+     * @param context Context is used internally
+     * @param listener Provided listener with given behaviour from the developer that will be registered
+     *
+     */
     @Throws(SecureStorageException::class)
     fun registerOnSecureStorageChangeListener(
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener
     ) {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        getSharedPreferencesInstance(applicationContext).registerOnSharedPreferenceChangeListener(listener)
+        getSharedPreferencesInstance(context.applicationContext).registerOnSharedPreferenceChangeListener(listener)
     }
 
+    /**
+     *
+     * Unregisters SecureStorageChangeListener from SecureStorage
+     *
+     * @param context Context is used internally
+     * @param listener Provided listener with given behaviour from the developer that will be unregistered
+     *
+     */
     @Throws(SecureStorageException::class)
     fun unregisterOnSecureStorageChangeListener(
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener
     ) {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        getSharedPreferencesInstance(applicationContext).unregisterOnSharedPreferenceChangeListener(listener)
+        getSharedPreferencesInstance(context.applicationContext).unregisterOnSharedPreferenceChangeListener(listener)
     }
 
     internal fun getSharedPreferencesInstance(context: Context): SharedPreferences {
-        val applicationContext = context.applicationContext
-
-        return applicationContext.getSharedPreferences(
+        return context.applicationContext.getSharedPreferences(
             SHARED_PREFERENCES_NAME,
             MODE_PRIVATE
         )
@@ -242,14 +368,12 @@ object SecureStorage {
 
     @Throws(SecureStorageException::class)
     private fun initSecureStorageKeys(context: Context) {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        KeyStoreTool.setInstallApiVersionFlag(applicationContext)
+        KeyStoreTool.setInstallApiVersionFlag(context.applicationContext)
 
-        if (!KeyStoreTool.keyExists(applicationContext)) {
-            KeyStoreTool.initKeys(applicationContext)
+        if (!KeyStoreTool.keyExists(context.applicationContext)) {
+            KeyStoreTool.initKeys(context.applicationContext)
         }
     }
 

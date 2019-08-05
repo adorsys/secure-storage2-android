@@ -17,32 +17,39 @@
 package de.adorsys.android.securestorage2
 
 @Suppress("unused")
-class SecureStorageException(detailMessage: String, cause: Throwable?, val type: ExceptionType) :
+/**
+ *
+ * Useful for catching possible exceptions thrown internally in the library so the user knows what to expect
+ *
+ * @param detailMessage Exception message that will be shown to developer when it is thrown
+ * @param cause Cause of the throwable that has been caught (can be null)
+ * @param type Type of exception that should be thrown
+ * @see ExceptionType
+ */
+class SecureStorageException(detailMessage: String, cause: Throwable?, private val type: ExceptionType) :
     Exception(detailMessage, cause) {
 
+    /**
+     *
+     * Used for throwing exceptions with a type that makes more sense to the developer based on the cause
+     *
+     * @property KEYSTORE_EXCEPTION If this exception type is defined you cannot use the keystore / this library on the current device. This is fatal and most likely due to native key store issues.
+     * @property CRYPTO_EXCEPTION If this exception type is defined a problem during encryption has occurred. Most likely this is due to using an invalid key for encryption or decryption.
+     * @property KEYSTORE_NOT_SUPPORTED_EXCEPTION If this exception type is set it means simply that the keystore cannot be used on the current device as it is not supported by this library.
+     * @property INTERNAL_LIBRARY_EXCEPTION If this exception type is set it means that something with this library is wrong.
+     */
     enum class ExceptionType {
-        /**
-         * If this exception type is defined you cannot use the keystore / this library on the current device.
-         * This is fatal and most likely due to native key store issues.
-         */
+
         KEYSTORE_EXCEPTION,
-        /**
-         * If this exception type is defined a problem during encryption has occurred.
-         * Most likely this is due to using an invalid key for encryption or decryption.
-         */
+
         CRYPTO_EXCEPTION,
-        /**
-         * If this exception type is set it means simply that the keystore
-         * cannot be used on the current device as it is not supported by this library.
-         */
+
         KEYSTORE_NOT_SUPPORTED_EXCEPTION,
-        /**
-         * If this exception type is set it means that something with this library is wrong.
-         */
+
         INTERNAL_LIBRARY_EXCEPTION
     }
 
-    companion object{
+    companion object {
         const val MESSAGE_KEY_DOES_NOT_EXIST = "Key does not exist"
         const val MESSAGE_KEYPAIR_DOES_NOT_EXIST = "Keypair does not exist"
         const val MESSAGE_ERROR_WHILE_DELETING_KEY = "Error occurred while trying to delete key"
