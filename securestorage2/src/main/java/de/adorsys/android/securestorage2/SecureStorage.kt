@@ -53,17 +53,17 @@ object SecureStorage {
         x500Principal: String? = null,
         useOnlyWithHardwareSupport: Boolean = false
     ) {
-        SHARED_PREFERENCES_NAME = context.packageName + ".SecureStorage2"
+        SHARED_PREFERENCES_NAME = context.applicationContext.packageName + ".SecureStorage2"
         ENCRYPTION_KEY_ALIAS = encryptionKeyAlias ?: "SecureStorage2Key"
         X500PRINCIPAL = x500Principal ?: "CN=SecureStorage2 , O=Adorsys GmbH & Co. KG., C=Germany"
         EXPLICITLY_USE_SECURE_HARDWARE = useOnlyWithHardwareSupport
 
         CAN_USE_LIBRARY = when {
-            useOnlyWithHardwareSupport -> KeyStoreTool.deviceHasSecureHardwareSupport(context)
+            useOnlyWithHardwareSupport -> KeyStoreTool.deviceHasSecureHardwareSupport(context.applicationContext)
             else -> true
         }
 
-        initSecureStorageKeys(context)
+        initSecureStorageKeys(context.applicationContext)
     }
 
     /**
@@ -71,6 +71,8 @@ object SecureStorage {
      * Checks if the device has secure hardware support (TEE or SE) for storing the Android Keystore keys
      *
      * @param context Context is used internally
+     *
+     * @return True if device has secure hardware support (TEE or SE), otherwise false
      *
      */
     @Throws(SecureStorageException::class)
@@ -104,17 +106,15 @@ object SecureStorage {
      */
     @Throws(SecureStorageException::class)
     fun putString(context: Context, key: String, value: String) {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        if (!KeyStoreTool.keyExists(applicationContext)) {
-            KeyStoreTool.generateKey(applicationContext)
+        if (!KeyStoreTool.keyExists(context.applicationContext)) {
+            KeyStoreTool.generateKey(context.applicationContext)
         }
 
-        val encryptedValue = KeyStoreTool.encryptValue(applicationContext, key, value)
+        val encryptedValue = KeyStoreTool.encryptValue(context.applicationContext, key, value)
 
-        putSecureValue(applicationContext, key, encryptedValue)
+        putSecureValue(context.applicationContext, key, encryptedValue)
     }
 
     /**
@@ -181,17 +181,15 @@ object SecureStorage {
      */
     @Throws(SecureStorageException::class)
     fun getString(context: Context, key: String, defaultValue: String): String {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        val encryptedValue = getSecureValue(applicationContext, key)
+        val encryptedValue = getSecureValue(context.applicationContext, key)
 
         if (encryptedValue.isNullOrBlank()) {
             return defaultValue
         }
 
-        val decryptedValue = KeyStoreTool.decryptValue(applicationContext, key, encryptedValue)
+        val decryptedValue = KeyStoreTool.decryptValue(context.applicationContext, key, encryptedValue)
 
         return when {
             decryptedValue.isNullOrBlank() -> defaultValue
@@ -267,11 +265,9 @@ object SecureStorage {
      */
     @Throws(SecureStorageException::class)
     fun contains(context: Context, key: String): Boolean {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        return getSharedPreferencesInstance(applicationContext).contains(key)
+        return getSharedPreferencesInstance(context.applicationContext).contains(key)
     }
 
     /**
@@ -284,11 +280,9 @@ object SecureStorage {
      */
     @Throws(SecureStorageException::class)
     fun remove(context: Context, key: String) {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        removeSecureValue(applicationContext, key)
+        removeSecureValue(context.applicationContext, key)
     }
 
     /**
@@ -300,16 +294,14 @@ object SecureStorage {
      */
     @Throws(SecureStorageException::class)
     fun clearAllValues(context: Context) {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        val apiVersionUnderMExisted = contains(applicationContext, KEY_INSTALLATION_API_VERSION_UNDER_M)
+        val apiVersionUnderMExisted = contains(context.applicationContext, KEY_INSTALLATION_API_VERSION_UNDER_M)
 
-        clearAllSecureValues(applicationContext)
+        clearAllSecureValues(context.applicationContext)
 
         if (apiVersionUnderMExisted) {
-            KeyStoreTool.setInstallApiVersionFlag(applicationContext, true)
+            KeyStoreTool.setInstallApiVersionFlag(context.applicationContext, true)
         }
     }
 
@@ -323,14 +315,12 @@ object SecureStorage {
      */
     @Throws(SecureStorageException::class)
     fun clearAllValuesAndDeleteKeys(context: Context) {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        if (KeyStoreTool.keyExists(applicationContext)) {
-            KeyStoreTool.deleteKey(applicationContext)
+        if (KeyStoreTool.keyExists(context.applicationContext)) {
+            KeyStoreTool.deleteKey(context.applicationContext)
         }
-        clearAllSecureValues(applicationContext)
+        clearAllSecureValues(context.applicationContext)
     }
 
     /**
@@ -346,11 +336,9 @@ object SecureStorage {
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener
     ) {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        getSharedPreferencesInstance(applicationContext).registerOnSharedPreferenceChangeListener(listener)
+        getSharedPreferencesInstance(context.applicationContext).registerOnSharedPreferenceChangeListener(listener)
     }
 
     /**
@@ -366,17 +354,13 @@ object SecureStorage {
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener
     ) {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        getSharedPreferencesInstance(applicationContext).unregisterOnSharedPreferenceChangeListener(listener)
+        getSharedPreferencesInstance(context.applicationContext).unregisterOnSharedPreferenceChangeListener(listener)
     }
 
     internal fun getSharedPreferencesInstance(context: Context): SharedPreferences {
-        val applicationContext = context.applicationContext
-
-        return applicationContext.getSharedPreferences(
+        return context.applicationContext.getSharedPreferences(
             SHARED_PREFERENCES_NAME,
             MODE_PRIVATE
         )
@@ -384,14 +368,12 @@ object SecureStorage {
 
     @Throws(SecureStorageException::class)
     private fun initSecureStorageKeys(context: Context) {
-        val applicationContext = context.applicationContext
-
         checkAppCanUseLibrary()
 
-        KeyStoreTool.setInstallApiVersionFlag(applicationContext)
+        KeyStoreTool.setInstallApiVersionFlag(context.applicationContext)
 
-        if (!KeyStoreTool.keyExists(applicationContext)) {
-            KeyStoreTool.initKeys(applicationContext)
+        if (!KeyStoreTool.keyExists(context.applicationContext)) {
+            KeyStoreTool.initKeys(context.applicationContext)
         }
     }
 

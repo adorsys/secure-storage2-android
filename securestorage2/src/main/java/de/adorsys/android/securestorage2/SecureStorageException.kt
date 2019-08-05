@@ -26,7 +26,7 @@ package de.adorsys.android.securestorage2
  * @param type Type of exception that should be thrown
  * @see ExceptionType
  */
-class SecureStorageException(detailMessage: String, cause: Throwable?, val type: ExceptionType) :
+class SecureStorageException(detailMessage: String, cause: Throwable?, private val type: ExceptionType) :
     Exception(detailMessage, cause) {
 
     /**
