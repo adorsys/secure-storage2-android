@@ -1,0 +1,36 @@
+site:
+  about:
+    siteName: SecureStorage2
+    siteDescription: Storing Credentials Securely on Android Devices
+
+Editorial:
+  primaryColor: '#13A258'
+  social:
+    github: 'adorsys/secure-storage2-android'
+  menu:
+    - type: 'page'
+      itemId: 'Changelog'
+    - type: 'separator'
+      title: 'API Docs'
+    - type: 'kotlindocPackages'
+    - type: 'kotlindocClasses'
+
+kotlindoc:
+  sourceDirs:
+    - './../../../../securestorage2/src/main/java'
+  pages:
+    extraCss:
+      - 'assets/css/orchidKotlindoc.scss'
+    menu:
+      - type: "kotlindocClassLinks"
+        includeItems: true
+
+services:
+  publications:
+    stages:
+      githubPages:
+        branch: gh-pages
+        repo: 'secure-storage2-android'
+        username: 'adorsys'
+      githubReleases:
+        repo: 'adorsys/secure-storage2-android'

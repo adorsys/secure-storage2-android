@@ -1,1 +1,1 @@
-include ':securestorage2sampleapp', ':securestorage2library'
+include ':app', ':securestorage2', ':docs'
