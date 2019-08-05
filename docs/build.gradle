@@ -24,4 +24,5 @@ orchid {
 
     // The following properties are optional
     version = "${versionName}"
+    baseUrl = "https://adorsys.github.io/secure-storage2-android"
 }
