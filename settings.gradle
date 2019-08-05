@@ -1,1 +1,1 @@
-include ':app', ':securestorage2'
+include ':app', ':securestorage2', ':docs'
