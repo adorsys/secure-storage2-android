@@ -24,15 +24,14 @@ android:
   components:
     - platform-tools
     - tools
-
     - build-tools-27.0.3
-
     - android-27
-
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
     - addon-google_apis-google-19
+    - android-22
+    - sys-img-armeabi-v7a-android-22
 
 before_install:
   # Install SDK license so Android Gradle plugin can install deps.
