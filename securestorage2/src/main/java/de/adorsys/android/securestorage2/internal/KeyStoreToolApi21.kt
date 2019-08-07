@@ -39,7 +39,6 @@ import java.security.PrivateKey
 import java.security.PublicKey
 import java.util.Calendar
 
-@SuppressLint("CommitPrefEdits")
 internal object KeyStoreToolApi21 {
 
     //================================================================================
@@ -61,6 +60,8 @@ internal object KeyStoreToolApi21 {
         generateRsaKey(context)
     }
 
+    // We have to suppress the lint warning even though .apply is used in .execute() extension function
+    @SuppressLint("CommitPrefEdits")
     @Throws(SecureStorageException::class)
     internal fun deleteKey(context: Context, keyStoreInstance: KeyStore) {
         // Delete Symmetric Key from SecureStorage
@@ -182,6 +183,8 @@ internal object KeyStoreToolApi21 {
         return secretKeys
     }
 
+    // We have to suppress the lint warning even though .apply is used in .execute() extension function
+    @SuppressLint("CommitPrefEdits")
     private fun storeAesKeyPart(
         context: Context,
         keyStoreInstance: KeyStore,
