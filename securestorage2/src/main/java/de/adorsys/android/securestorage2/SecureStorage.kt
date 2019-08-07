@@ -40,9 +40,10 @@ object SecureStorage {
     private var CAN_USE_LIBRARY = true
 
     /**
+     *
      * Initialize the library with desired options
      *
-     * @param context Context is used internally for initializing keys
+     * @param context Context is used internally
      * @param encryptionKeyAlias Alias for the encryption key/keypair (default value: SecureStorage2Key)
      * @param x500Principal Distinguished Name used for generating KeyPair for asymmetric en/decryption
      * (default value: CN=SecureStorage2 , O=Adorsys GmbH & Co. KG., C=Germany)
@@ -64,8 +65,24 @@ object SecureStorage {
             useOnlyWithHardwareSupport -> KeyStoreTool.deviceHasSecureHardwareSupport(context.applicationContext)
             else -> true
         }
+    }
 
-        initSecureStorageKeys(context.applicationContext)
+    /**
+     *
+     * Initialize SecureStorage keys for library usage.
+     *
+     * @param context Context is used internally
+     *
+     */
+    @Throws(SecureStorageException::class)
+    fun initSecureStorageKeys(context: Context) {
+        checkAppCanUseLibrary()
+
+        KeyStoreTool.setInstallApiVersionFlag(context.applicationContext)
+
+        if (!KeyStoreTool.keyExists(context.applicationContext)) {
+            KeyStoreTool.generateKey(context.applicationContext)
+        }
     }
 
     /**
@@ -109,10 +126,6 @@ object SecureStorage {
     @Throws(SecureStorageException::class)
     fun putString(context: Context, key: String, value: String) {
         checkAppCanUseLibrary()
-
-        if (!KeyStoreTool.keyExists(context.applicationContext)) {
-            KeyStoreTool.generateKey(context.applicationContext)
-        }
 
         val encryptedValue = KeyStoreTool.encryptValue(context.applicationContext, key, value)
 
@@ -374,17 +387,6 @@ object SecureStorage {
             SHARED_PREFERENCES_NAME,
             MODE_PRIVATE
         )
-    }
-
-    @Throws(SecureStorageException::class)
-    private fun initSecureStorageKeys(context: Context) {
-        checkAppCanUseLibrary()
-
-        KeyStoreTool.setInstallApiVersionFlag(context.applicationContext)
-
-        if (!KeyStoreTool.keyExists(context.applicationContext)) {
-            KeyStoreTool.initKeys(context.applicationContext)
-        }
     }
 
     @SuppressLint("CommitPrefEdits")
