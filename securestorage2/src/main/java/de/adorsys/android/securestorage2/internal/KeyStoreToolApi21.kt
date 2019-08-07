@@ -53,8 +53,8 @@ internal object KeyStoreToolApi21 {
     private const val KEY_AES_INTEGRITY_KEY = "AesIntegrityKey"
 
     @Throws(SecureStorageException::class)
-    internal fun keyExists(context: Context, keyStoreInstance: KeyStore): Boolean =
-        rsaKeyPairExists(keyStoreInstance) && aesKeyExists(context)
+    internal fun keyExists(keyStoreInstance: KeyStore): Boolean =
+        rsaKeyPairExists(keyStoreInstance)
 
     internal fun generateKey(context: Context) {
         generateRsaKey(context)
@@ -95,10 +95,18 @@ internal object KeyStoreToolApi21 {
         key: String,
         value: String
     ): String {
-        generateAesKey(context, keyStoreInstance, cipher, key)
+        return if (keyExists(keyStoreInstance)) {
+            generateAesKey(context, keyStoreInstance, cipher, key)
 
-        val aesKey = getAesKey(context, keyStoreInstance, cipher, key)
-        return AesCbcWithIntegrity.encrypt(value, aesKey).toString()
+            val aesKey = getAesKey(context, keyStoreInstance, cipher, key)
+            AesCbcWithIntegrity.encrypt(value, aesKey).toString()
+        } else {
+            throw SecureStorageException(
+                SecureStorageException.MESSAGE_KEYPAIR_DOES_NOT_EXIST,
+                null,
+                SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
+            )
+        }
     }
 
     internal fun decryptValue(
@@ -132,11 +140,6 @@ internal object KeyStoreToolApi21 {
             )
         }
     }
-
-    @Throws(SecureStorageException::class)
-    private fun aesKeyExists(context: Context): Boolean =
-        SecureStorage.getSharedPreferencesInstance(context).contains(KEY_AES_CONFIDENTIALITY_KEY)
-                && SecureStorage.getSharedPreferencesInstance(context).contains(KEY_AES_INTEGRITY_KEY)
 
     private fun generateRsaKey(context: Context): KeyPair? {
         val keyPairGenerator = getKeyPairGenerator()

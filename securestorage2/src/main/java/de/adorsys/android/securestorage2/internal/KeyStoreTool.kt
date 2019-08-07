@@ -42,17 +42,6 @@ internal object KeyStoreTool {
     // SecureStorage KeyStoreTool Logic
     //================================================================================
 
-    internal fun initKeys(context: Context) {
-        generateKey(context)
-    }
-
-    internal fun keyExists(context: Context): Boolean {
-        return when {
-            apiVersionMAndAbove(context) -> KeyStoreToolApi23.keyExists(getKeyStoreInstance())
-            else -> KeyStoreToolApi21.keyExists(context, getKeyStoreInstance())
-        }
-    }
-
     internal fun generateKey(context: Context) {
         when {
             !keyExists(context) -> {
@@ -64,6 +53,13 @@ internal object KeyStoreTool {
                     else -> KeyStoreToolApi21.generateKey(context)
                 }
             }
+        }
+    }
+
+    internal fun keyExists(context: Context): Boolean {
+        return when {
+            apiVersionMAndAbove(context) -> KeyStoreToolApi23.keyExists(getKeyStoreInstance())
+            else -> KeyStoreToolApi21.keyExists(getKeyStoreInstance())
         }
     }
 

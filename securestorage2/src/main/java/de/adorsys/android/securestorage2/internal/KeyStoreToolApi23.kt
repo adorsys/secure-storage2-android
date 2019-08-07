@@ -104,15 +104,15 @@ internal object KeyStoreToolApi23 {
         value: String
     ): String {
 
-        val secretKey = (if (!keyExists(keyStoreInstance)) {
-            generateKey()
-        } else {
+        val secretKey = if (keyExists(keyStoreInstance)) {
             getSecretKey(keyStoreInstance)
-        }) ?: throw SecureStorageException(
-            SecureStorageException.MESSAGE_KEY_DOES_NOT_EXIST,
-            null,
-            SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
-        )
+        } else {
+            throw SecureStorageException(
+                SecureStorageException.MESSAGE_KEY_DOES_NOT_EXIST,
+                null,
+                SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
+            )
+        }
 
         cipher.init(Cipher.ENCRYPT_MODE, secretKey)
         val bytes = cipher.doFinal(value.toByteArray())
