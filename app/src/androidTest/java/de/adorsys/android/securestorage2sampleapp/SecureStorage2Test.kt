@@ -32,12 +32,16 @@ open class SecureStorage2Test {
     @Before
     @Throws(SecureStorageException::class)
     fun setUp() {
+        // Init library parameters
         SecureStorage.init(
             context = activityRule.activity.applicationContext,
             encryptionKeyAlias = "SecureStorage2Key",
             x500Principal = "CN=SecureStorage2 , O=Adorsys GmbH & Co. KG., C=Germany",
             useOnlyWithHardwareSupport = false
         )
+
+        // Generate SecureStorage keys
+        SecureStorage.initSecureStorageKeys(activityRule.activity.applicationContext)
     }
 
     @Test
