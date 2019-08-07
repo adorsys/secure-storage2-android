@@ -5,22 +5,10 @@ dist: trusty
 jdk:
   - oraclejdk8
 
-script:
-  - ./gradlew clean check --parallel
-  - ./gradlew detekt
-
-before_install:
-  # Install SDK license so Android Gradle plugin can install deps.
-  - mkdir "$ANDROID_HOME/licenses" || true
-  - echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
-
-after_success:
-  - .buildscript/deploy_snapshot.sh
+sudo: true
 
 notifications:
   email: false
-
-sudo: true
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -31,3 +19,38 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
+
+android:
+  components:
+    - platform-tools
+    - tools
+    - build-tools-27.0.3
+    - android-27
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - extra-android-m2repository
+    - addon-google_apis-google-19
+    - android-22
+    - sys-img-armeabi-v7a-android-22
+
+before_install:
+  # Install SDK license so Android Gradle plugin can install deps.
+  - mkdir "$ANDROID_HOME/licenses" || true
+  - echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - yes | sdkmanager "platforms;android-27"
+
+before_script:
+  - touch local.properties
+  - chmod +x gradlew
+  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
+  - emulator -avd test -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+
+script:
+  - ./gradlew clean check --parallel
+  - ./gradlew detekt
+  - ./gradlew connectedCheck
+
+after_success:
+  - .buildscript/deploy_snapshot.sh
