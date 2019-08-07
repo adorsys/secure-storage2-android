@@ -44,8 +44,10 @@ object SecureStorage {
      *
      * @param context Context is used internally for initializing keys
      * @param encryptionKeyAlias Alias for the encryption key/keypair (default value: SecureStorage2Key)
-     * @param x500Principal Distinguished Name used for generating KeyPair for asymmetric en/decryption (default value: CN=SecureStorage2 , O=Adorsys GmbH & Co. KG., C=Germany)
-     * @param useOnlyWithHardwareSupport If this parameter is true the library will only work on devices that have a TEE or SE otherwise it'ss throw an exception
+     * @param x500Principal Distinguished Name used for generating KeyPair for asymmetric en/decryption
+     * (default value: CN=SecureStorage2 , O=Adorsys GmbH & Co. KG., C=Germany)
+     * @param useOnlyWithHardwareSupport If this parameter is true the library will only work on devices that
+     * have a TEE or SE otherwise it'ss throw an exception
      */
     fun init(
         context: Context,
@@ -170,11 +172,13 @@ object SecureStorage {
 
     /**
      *
-     * Gets encrypted String value for given key from the SecureStorage on the Android Device, decrypts it and returns it
+     * Gets encrypted String value for given key from the SecureStorage on the Android Device, decrypts it
+     * and returns it
      *
      * @param context Context is used internally
      * @param key Key used to identify the stored value in SecureStorage
-     * @param defaultValue Default String value that will be returned if the value with given key doesn't exist or an exception is thrown
+     * @param defaultValue Default String value that will be returned if the value with given key doesn't exist or
+     * an exception is thrown
      *
      * @return Decrypted String value associated with given key from SecureStorage
      *
@@ -199,11 +203,13 @@ object SecureStorage {
 
     /**
      *
-     * Gets encrypted boolean value for given key from the SecureStorage on the Android Device, decrypts it and returns it
+     * Gets encrypted boolean value for given key from the SecureStorage on the Android Device, decrypts it
+     * and returns it
      *
      * @param context Context is used internally
      * @param key Key used to identify the stored value in SecureStorage
-     * @param defaultValue Default boolean value that will be returned if the value with given key doesn't exist or an exception is thrown
+     * @param defaultValue Default boolean value that will be returned if the value with given key doesn't exist or
+     * an exception is thrown
      *
      * @return Decrypted boolean value associated with given key from SecureStorage
      *
@@ -213,11 +219,13 @@ object SecureStorage {
 
     /**
      *
-     * Gets encrypted float value for given key from the SecureStorage on the Android Device, decrypts it and returns it
+     * Gets encrypted float value for given key from the SecureStorage on the Android Device, decrypts it
+     * and returns it
      *
      * @param context Context is used internally
      * @param key Key used to identify the stored value in SecureStorage
-     * @param defaultValue Default float value that will be returned if the value with given key doesn't exist or an exception is thrown
+     * @param defaultValue Default float value that will be returned if the value with given key doesn't exist or
+     * an exception is thrown
      *
      * @return Decrypted float value associated with given key from SecureStorage
      *
@@ -231,7 +239,8 @@ object SecureStorage {
      *
      * @param context Context is used internally
      * @param key Key used to identify the stored value in SecureStorage
-     * @param defaultValue Default long value that will be returned if the value with given key doesn't exist or an exception is thrown
+     * @param defaultValue Default long value that will be returned if the value with given key doesn't exist or
+     * an exception is thrown
      *
      * @return Decrypted long value associated with given key from SecureStorage
      *
@@ -245,7 +254,8 @@ object SecureStorage {
      *
      * @param context Context is used internally
      * @param key Key used to identify the stored value in SecureStorage
-     * @param defaultValue Default int value that will be returned if the value with given key doesn't exist or an exception is thrown
+     * @param defaultValue Default int value that will be returned if the value with given key doesn't exist or
+     * an exception is thrown
      *
      * @return Decrypted int value associated with given key from SecureStorage
      *

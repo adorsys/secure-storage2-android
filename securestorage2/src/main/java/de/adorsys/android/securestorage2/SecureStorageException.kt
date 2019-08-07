@@ -33,10 +33,14 @@ class SecureStorageException(detailMessage: String, cause: Throwable?, private v
      *
      * Used for throwing exceptions with a type that makes more sense to the developer based on the cause
      *
-     * @property KEYSTORE_EXCEPTION If this exception type is defined you cannot use the keystore / this library on the current device. This is fatal and most likely due to native key store issues.
-     * @property CRYPTO_EXCEPTION If this exception type is defined a problem during encryption has occurred. Most likely this is due to using an invalid key for encryption or decryption.
-     * @property KEYSTORE_NOT_SUPPORTED_EXCEPTION If this exception type is set it means simply that the keystore cannot be used on the current device as it is not supported by this library.
-     * @property INTERNAL_LIBRARY_EXCEPTION If this exception type is set it means that something with this library is wrong.
+     * @property KEYSTORE_EXCEPTION If this exception type is defined you cannot use the keystore / this library on
+     * the current device. This is fatal and most likely due to native key store issues.
+     * @property CRYPTO_EXCEPTION If this exception type is defined a problem during encryption has occurred.
+     * Most likely this is due to using an invalid key for encryption or decryption.
+     * @property KEYSTORE_NOT_SUPPORTED_EXCEPTION If this exception type is set it means simply that the keystore
+     * cannot be used on the current device as it is not supported by this library.
+     * @property INTERNAL_LIBRARY_EXCEPTION If this exception type is set it means that something with
+     * this library is wrong.
      */
     enum class ExceptionType {
 
