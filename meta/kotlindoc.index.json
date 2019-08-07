@@ -1,0 +1,78 @@
+{
+  "ownKey": "kotlindoc",
+  "childrenPages": {"de": {
+    "ownKey": "de",
+    "childrenPages": {"adorsys": {
+      "ownKey": "adorsys",
+      "childrenPages": {"android": {
+        "ownKey": "android",
+        "childrenPages": {"securestorage2": {
+          "ownKey": "securestorage2",
+          "childrenPages": {
+            "SecureStorageException": {
+              "ownKey": "SecureStorageException",
+              "childrenPages": {"ExceptionType": {
+                "ownKey": "ExceptionType",
+                "ownPages": [{
+                  "reference": {
+                    "path": "de/adorsys/android/securestorage2/SecureStorageException",
+                    "baseUrl": "https://adorsys.github.io/secure-storage2-android",
+                    "fileName": "ExceptionType",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://adorsys.github.io/secure-storage2-android/de/adorsys/android/securestorage2/SecureStorageException/ExceptionType"
+                  },
+                  "description": "",
+                  "title": "ExceptionType",
+                  "content": "<p>Used for throwing exceptions with a type that makes more sense to the developer based on the cause<\/p>\n"
+                }]
+              }},
+              "ownPages": [{
+                "reference": {
+                  "path": "de/adorsys/android/securestorage2",
+                  "baseUrl": "https://adorsys.github.io/secure-storage2-android",
+                  "fileName": "SecureStorageException",
+                  "extension": "html",
+                  "usePrettyUrl": true,
+                  "link": "https://adorsys.github.io/secure-storage2-android/de/adorsys/android/securestorage2/SecureStorageException"
+                },
+                "description": "",
+                "title": "SecureStorageException",
+                "content": "<p>Useful for catching possible exceptions thrown internally in the library so the user knows what to expect<init>\nUseful for catching possible exceptions thrown internally in the library so the user knows what to expect<\/p>\n"
+              }]
+            },
+            "SecureStorage": {
+              "ownKey": "SecureStorage",
+              "ownPages": [{
+                "reference": {
+                  "path": "de/adorsys/android/securestorage2",
+                  "baseUrl": "https://adorsys.github.io/secure-storage2-android",
+                  "fileName": "SecureStorage",
+                  "extension": "html",
+                  "usePrettyUrl": true,
+                  "link": "https://adorsys.github.io/secure-storage2-android/de/adorsys/android/securestorage2/SecureStorage"
+                },
+                "description": "",
+                "title": "SecureStorage",
+                "content": "<p>init\nInitialize the library with desired options\ninitSecureStorageKeys\nInitialize SecureStorage keys for library usage.\ndeviceHasSecureHardwareSupport\nChecks if the device has secure hardware support (TEE or SE) for storing the Android Keystore keys\nisKeyInsideSecureHardware\nChecks if the keys are stored in secure hardware (TEE or SE)\nputString\nTakes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device\nputBoolean\nTakes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device\nputFloat\nTakes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device\nputLong\nTakes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device\nputInt\nTakes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device\ngetString\nGets encrypted String value for given key from the SecureStorage on the Android Device, decrypts it\nand returns it\ngetBoolean\nGets encrypted boolean value for given key from the SecureStorage on the Android Device, decrypts it\nand returns it\ngetFloat\nGets encrypted float value for given key from the SecureStorage on the Android Device, decrypts it\nand returns it\ngetLong\nGets encrypted long value for given key from the SecureStorage on the Android Device, decrypts it and returns it\ngetInt\nGets encrypted int value for given key  from the SecureStorage on the Android Device, decrypts it and returns it\ncontains\nChecks if SecureStorage contains a value for the given key (Does not return the value or check what type it is)\nremove\nRemoves the value for a given key from SecureStorage\nclearAllValues\nClears all values from the SecureStorage on the Android Device\nclearAllValuesAndDeleteKeys\nClears all values from the SecureStorage on the Android Device and deletes the en/decryption keys\nMeans new keys/keypairs have to be generated for the library to be able to work\nregisterOnSecureStorageChangeListener\nRegisters SecureStorageChangeListener to listen to any changes in SecureStorage\nunregisterOnSecureStorageChangeListener\nUnregisters SecureStorageChangeListener from SecureStorage<\/p>\n"
+              }]
+            }
+          },
+          "ownPages": [{
+            "reference": {
+              "path": "de/adorsys/android",
+              "baseUrl": "https://adorsys.github.io/secure-storage2-android",
+              "fileName": "securestorage2",
+              "extension": "html",
+              "usePrettyUrl": true,
+              "link": "https://adorsys.github.io/secure-storage2-android/de/adorsys/android/securestorage2"
+            },
+            "description": "",
+            "title": "de.adorsys.android.securestorage2",
+            "content": ""
+          }]
+        }}
+      }}
+    }}
+  }}
+}

@@ -1,0 +1,1565 @@
+<!DOCTYPE HTML>
+<!--
+    Editorial by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.17.1"/>
+<link rel="icon" href="https://adorsys.github.io/secure-storage2-android/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>SecureStorage</title>
+
+
+<meta name="description" content="Storing Credentials Securely on Android Devices">
+
+
+
+
+
+<script>
+    window.site = {"orchidVersion":"0.17.1","baseUrl":"https://adorsys.github.io/secure-storage2-android","environment":"debug","version":"0.0.4"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Editorial -->
+<!-- Class: com.eden.orchid.editorial.EditorialTheme -->
+
+<!-- PAGE -->
+<!-- Type: kotlindocClass -->
+<!-- Class: com.eden.orchid.kotlindoc.page.KotlindocClassPage -->
+<!-- Layout: index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: kotlindocClass, page -->
+<!-- Resolved Page Template:  -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.kotlindoc.resources.KotlinClassdocResource -->
+<!-- Source Filename: de/adorsys/android/securestorage2/SecureStorage.html -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"de/adorsys/android/securestorage2","baseUrl":"https://adorsys.github.io/secure-storage2-android","fileName":"SecureStorage","extension":"html","usePrettyUrl":true,"link":"https://adorsys.github.io/secure-storage2-android/de/adorsys/android/securestorage2/SecureStorage"},"description":"","title":"SecureStorage"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="https://adorsys.github.io/secure-storage2-android/Editorial/d6bde1e3/assets/css/editorial_main.css"/>
+<link rel="stylesheet" type="text/css" href="https://adorsys.github.io/secure-storage2-android/Editorial/d6bde1e3/assets/css/editorial_orchidCustomizations.css"/>
+<link rel="stylesheet" type="text/css" href="https://adorsys.github.io/secure-storage2-android/Editorial/d6bde1e3/assets/css/orchidSearch.css"/>
+<link rel="stylesheet" type="text/css" href="https://adorsys.github.io/secure-storage2-android/assets/css/orchidKotlindoc.css"/>
+<!-- end:inject styles -->
+
+</head>
+<body class="is-loading">
+
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+
+            <!-- Header -->
+            
+                <header id="header">
+    <a href="https://adorsys.github.io/secure-storage2-android" class="logo">SecureStorage2</a>
+    <ul class="icons">
+    
+    
+        <li>
+            <a href="https://github.com/adorsys/secure-storage2-android" class="icon fa-github">
+                <span class="label">github</span>
+            </a>
+        </li>
+    
+    
+    </ul>
+</header>
+            
+            
+            
+            
+                <section id="pageContent">
+                    <header class="major"><h2>SecureStorage</h2></header>
+                    <article>
+                        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="orchid-sourcedoc">
+
+
+<p id="summary">
+    <b>In package <a href="https://adorsys.github.io/secure-storage2-android/de/adorsys/android/securestorage2">de.adorsys.android.securestorage2</a></b>
+</p>
+<p>
+    <code style="padding: 0;">
+        class de.adorsys.android.securestorage2.SecureStorage
+    </code>
+</p>
+<div class="class-description" id="description">
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h2 id="methods">Methods</h2>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_init_context___ERROR_CLASS___encryptionKeyAlias__String___x500Principal__String___useOnlyWithHardwareSupport__Boolean_">
+        <code>
+        fun init(context: <ERROR CLASS>, encryptionKeyAlias: String?, x500Principal: String?, useOnlyWithHardwareSupport: Boolean)
+        </code>
+    </div>
+    <div class="panel-body"><p>Initialize the library with desired options</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        encryptionKeyAlias: String?
+        </code>
+        
+            <br><br>
+            <div><p>Alias for the encryption key/keypair (default value: SecureStorage2Key)</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        x500Principal: String?
+        </code>
+        
+            <br><br>
+            <div><p>Distinguished Name used for generating KeyPair for asymmetric en/decryption
+(default value: CN=SecureStorage2 , O=Adorsys GmbH &amp; Co. KG., C=Germany)</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        useOnlyWithHardwareSupport: Boolean
+        </code>
+        
+            <br><br>
+            <div><p>If this parameter is true the library will only work on devices that
+have a TEE or SE otherwise it'ss throw an exception</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_initSecureStorageKeys_context___ERROR_CLASS__">
+        <code>
+        fun initSecureStorageKeys(context: <ERROR CLASS>)
+        </code>
+    </div>
+    <div class="panel-body"><p>Initialize SecureStorage keys for library usage.</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_deviceHasSecureHardwareSupport_context___ERROR_CLASS____Boolean">
+        <code>
+        fun deviceHasSecureHardwareSupport(context: <ERROR CLASS>): Boolean
+        </code>
+    </div>
+    <div class="panel-body"><p>Checks if the device has secure hardware support (TEE or SE) for storing the Android Keystore keys</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+<div class="panel-footer">
+    <div><b>Returns: </b></div>
+    <div>
+        <code>
+        Boolean
+        </code>
+    </div>
+    <div><p>True if device has secure hardware support (TEE or SE), otherwise false</p>
+</div>
+</div>
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_isKeyInsideSecureHardware__">
+        <code>
+        fun isKeyInsideSecureHardware()
+        </code>
+    </div>
+    <div class="panel-body"><p>Checks if the keys are stored in secure hardware (TEE or SE)</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item">No parameters</li>
+
+</ul>
+
+    
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_putString_context___ERROR_CLASS___key__String__value__String_">
+        <code>
+        fun putString(context: <ERROR CLASS>, key: String, value: String)
+        </code>
+    </div>
+    <div class="panel-body"><p>Takes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        key: String
+        </code>
+        
+            <br><br>
+            <div><p>Key used to identify the stored value in SecureStorage</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        value: String
+        </code>
+        
+            <br><br>
+            <div><p>Plain String value that will be encrypted and stored in the SecureStorage</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_putBoolean_context___ERROR_CLASS___key__String__value__Boolean_">
+        <code>
+        fun putBoolean(context: <ERROR CLASS>, key: String, value: Boolean)
+        </code>
+    </div>
+    <div class="panel-body"><p>Takes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        key: String
+        </code>
+        
+            <br><br>
+            <div><p>Key used to identify the stored value in SecureStorage</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        value: Boolean
+        </code>
+        
+            <br><br>
+            <div><p>Plain boolean value that will be encrypted and stored in the SecureStorage</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_putFloat_context___ERROR_CLASS___key__String__value__Float_">
+        <code>
+        fun putFloat(context: <ERROR CLASS>, key: String, value: Float)
+        </code>
+    </div>
+    <div class="panel-body"><p>Takes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        key: String
+        </code>
+        
+            <br><br>
+            <div><p>Key used to identify the stored value in SecureStorage</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        value: Float
+        </code>
+        
+            <br><br>
+            <div><p>Plain float value that will be encrypted and stored in the SecureStorage</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_putLong_context___ERROR_CLASS___key__String__value__Long_">
+        <code>
+        fun putLong(context: <ERROR CLASS>, key: String, value: Long)
+        </code>
+    </div>
+    <div class="panel-body"><p>Takes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        key: String
+        </code>
+        
+            <br><br>
+            <div><p>Key used to identify the stored value in SecureStorage</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        value: Long
+        </code>
+        
+            <br><br>
+            <div><p>Plain long value that will be encrypted and stored in the SecureStorage</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_putInt_context___ERROR_CLASS___key__String__value__Int_">
+        <code>
+        fun putInt(context: <ERROR CLASS>, key: String, value: Int)
+        </code>
+    </div>
+    <div class="panel-body"><p>Takes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        key: String
+        </code>
+        
+            <br><br>
+            <div><p>Key used to identify the stored value in SecureStorage</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        value: Int
+        </code>
+        
+            <br><br>
+            <div><p>Plain int value that will be encrypted and stored in the SecureStorage</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_getString_context___ERROR_CLASS___key__String__defaultValue__String___String">
+        <code>
+        fun getString(context: <ERROR CLASS>, key: String, defaultValue: String): String
+        </code>
+    </div>
+    <div class="panel-body"><p>Gets encrypted String value for given key from the SecureStorage on the Android Device, decrypts it
+and returns it</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        key: String
+        </code>
+        
+            <br><br>
+            <div><p>Key used to identify the stored value in SecureStorage</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        defaultValue: String
+        </code>
+        
+            <br><br>
+            <div><p>Default String value that will be returned if the value with given key doesn't exist or
+an exception is thrown</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+<div class="panel-footer">
+    <div><b>Returns: </b></div>
+    <div>
+        <code>
+        String
+        </code>
+    </div>
+    <div><p>Decrypted String value associated with given key from SecureStorage</p>
+</div>
+</div>
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_getBoolean_context___ERROR_CLASS___key__String__defaultValue__Boolean___Boolean">
+        <code>
+        fun getBoolean(context: <ERROR CLASS>, key: String, defaultValue: Boolean): Boolean
+        </code>
+    </div>
+    <div class="panel-body"><p>Gets encrypted boolean value for given key from the SecureStorage on the Android Device, decrypts it
+and returns it</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        key: String
+        </code>
+        
+            <br><br>
+            <div><p>Key used to identify the stored value in SecureStorage</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        defaultValue: Boolean
+        </code>
+        
+            <br><br>
+            <div><p>Default boolean value that will be returned if the value with given key doesn't exist or
+an exception is thrown</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+<div class="panel-footer">
+    <div><b>Returns: </b></div>
+    <div>
+        <code>
+        Boolean
+        </code>
+    </div>
+    <div><p>Decrypted boolean value associated with given key from SecureStorage</p>
+</div>
+</div>
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_getFloat_context___ERROR_CLASS___key__String__defaultValue__Float___Float">
+        <code>
+        fun getFloat(context: <ERROR CLASS>, key: String, defaultValue: Float): Float
+        </code>
+    </div>
+    <div class="panel-body"><p>Gets encrypted float value for given key from the SecureStorage on the Android Device, decrypts it
+and returns it</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        key: String
+        </code>
+        
+            <br><br>
+            <div><p>Key used to identify the stored value in SecureStorage</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        defaultValue: Float
+        </code>
+        
+            <br><br>
+            <div><p>Default float value that will be returned if the value with given key doesn't exist or
+an exception is thrown</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+<div class="panel-footer">
+    <div><b>Returns: </b></div>
+    <div>
+        <code>
+        Float
+        </code>
+    </div>
+    <div><p>Decrypted float value associated with given key from SecureStorage</p>
+</div>
+</div>
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_getLong_context___ERROR_CLASS___key__String__defaultValue__Long___Long">
+        <code>
+        fun getLong(context: <ERROR CLASS>, key: String, defaultValue: Long): Long
+        </code>
+    </div>
+    <div class="panel-body"><p>Gets encrypted long value for given key from the SecureStorage on the Android Device, decrypts it and returns it</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        key: String
+        </code>
+        
+            <br><br>
+            <div><p>Key used to identify the stored value in SecureStorage</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        defaultValue: Long
+        </code>
+        
+            <br><br>
+            <div><p>Default long value that will be returned if the value with given key doesn't exist or
+an exception is thrown</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+<div class="panel-footer">
+    <div><b>Returns: </b></div>
+    <div>
+        <code>
+        Long
+        </code>
+    </div>
+    <div><p>Decrypted long value associated with given key from SecureStorage</p>
+</div>
+</div>
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_getInt_context___ERROR_CLASS___key__String__defaultValue__Int___Int">
+        <code>
+        fun getInt(context: <ERROR CLASS>, key: String, defaultValue: Int): Int
+        </code>
+    </div>
+    <div class="panel-body"><p>Gets encrypted int value for given key  from the SecureStorage on the Android Device, decrypts it and returns it</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        key: String
+        </code>
+        
+            <br><br>
+            <div><p>Key used to identify the stored value in SecureStorage</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        defaultValue: Int
+        </code>
+        
+            <br><br>
+            <div><p>Default int value that will be returned if the value with given key doesn't exist or
+an exception is thrown</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+<div class="panel-footer">
+    <div><b>Returns: </b></div>
+    <div>
+        <code>
+        Int
+        </code>
+    </div>
+    <div><p>Decrypted int value associated with given key from SecureStorage</p>
+</div>
+</div>
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_contains_context___ERROR_CLASS___key__String___Boolean">
+        <code>
+        fun contains(context: <ERROR CLASS>, key: String): Boolean
+        </code>
+    </div>
+    <div class="panel-body"><p>Checks if SecureStorage contains a value for the given key (Does not return the value or check what type it is)</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        key: String
+        </code>
+        
+            <br><br>
+            <div><p>Key used to identify the stored value in SecureStorage</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+<div class="panel-footer">
+    <div><b>Returns: </b></div>
+    <div>
+        <code>
+        Boolean
+        </code>
+    </div>
+    <div><p>True if value exists in SecureStorage, otherwise false</p>
+</div>
+</div>
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_remove_context___ERROR_CLASS___key__String_">
+        <code>
+        fun remove(context: <ERROR CLASS>, key: String)
+        </code>
+    </div>
+    <div class="panel-body"><p>Removes the value for a given key from SecureStorage</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        key: String
+        </code>
+        
+            <br><br>
+            <div><p>Key used to identify the stored value in SecureStorage</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_clearAllValues_context___ERROR_CLASS__">
+        <code>
+        fun clearAllValues(context: <ERROR CLASS>)
+        </code>
+    </div>
+    <div class="panel-body"><p>Clears all values from the SecureStorage on the Android Device</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_clearAllValuesAndDeleteKeys_context___ERROR_CLASS__">
+        <code>
+        fun clearAllValuesAndDeleteKeys(context: <ERROR CLASS>)
+        </code>
+    </div>
+    <div class="panel-body"><p>Clears all values from the SecureStorage on the Android Device and deletes the en/decryption keys
+Means new keys/keypairs have to be generated for the library to be able to work</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_registerOnSecureStorageChangeListener_context___ERROR_CLASS___listener___ERROR_CLASS__">
+        <code>
+        fun registerOnSecureStorageChangeListener(context: <ERROR CLASS>, listener: <ERROR CLASS>)
+        </code>
+    </div>
+    <div class="panel-body"><p>Registers SecureStorageChangeListener to listen to any changes in SecureStorage</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        listener: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Provided listener with given behaviour from the developer that will be registered</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" id="method__fun_unregisterOnSecureStorageChangeListener_context___ERROR_CLASS___listener___ERROR_CLASS__">
+        <code>
+        fun unregisterOnSecureStorageChangeListener(context: <ERROR CLASS>, listener: <ERROR CLASS>)
+        </code>
+    </div>
+    <div class="panel-body"><p>Unregisters SecureStorageChangeListener from SecureStorage</p>
+</div>
+
+    
+
+    
+<div class="panel-body">
+    <b>Parameters: </b>
+</div>
+<ul class="list-group">
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        context: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Context is used internally</p>
+</div>
+        
+    </li>
+
+    <li class="list-group-item clearfix">
+        <code class="pull-left">
+        listener: <ERROR CLASS>
+        </code>
+        
+            <br><br>
+            <div><p>Provided listener with given behaviour from the developer that will be unregistered</p>
+</div>
+        
+    </li>
+
+</ul>
+
+    
+
+</div>
+
+
+
+
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+                    </article>
+                </section>
+            
+        </div>
+        <hr>
+
+        <!-- Page Footer -->
+        <div class="inner">
+    <footer id="footer">
+        <div class="clearfix">
+            
+            
+        </div>
+    </footer>
+</div>
+
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+    <div class="inner">
+
+        <!-- Search -->
+        <section id="search" class="alt">
+            <form data-orchid-search="">
+                <input type="text" name="query" id="query" placeholder="Search"/>
+            </form>
+            <div class="box" id="search-results" data-orchid-search-results style="display: none;">
+                <b>Search Results</b>
+                <ul></ul>
+            </div>
+            <div class="box" id="search-progress" data-orchid-search-progress style="display: none;">
+                <div class="loader">Loading...</div>
+            </div>
+        </section>
+
+        <!-- Menu -->
+        <nav id="siteNav" class="menu">
+            <header class="major">
+                <h2>SecureStorage2</h2>
+            </header>
+            <ul class="top-level">
+                
+                    
+    
+    <li>
+        <a href="https://adorsys.github.io/secure-storage2-android/changelog">Changelog</a>
+    </li>
+    
+
+                
+                    
+    
+    <li>
+        <a class="subheader">API Docs</a>
+    </li>
+    
+
+                
+                    
+    <li>
+        <span class="opener">All Classes</span>
+        <ul>
+        
+            
+    
+    <li>
+        <a href="https://adorsys.github.io/secure-storage2-android/de/adorsys/android/securestorage2/SecureStorageException/ExceptionType">ExceptionType</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="https://adorsys.github.io/secure-storage2-android/de/adorsys/android/securestorage2/SecureStorage">SecureStorage</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="https://adorsys.github.io/secure-storage2-android/de/adorsys/android/securestorage2/SecureStorageException">SecureStorageException</a>
+    </li>
+    
+
+        
+        </ul>
+    </li>
+
+                
+                    
+    <li>
+        <span class="opener">All Packages</span>
+        <ul>
+        
+            
+    
+    <li>
+        <a href="https://adorsys.github.io/secure-storage2-android/de/adorsys/android/securestorage2">de.adorsys.android.securestorage2</a>
+    </li>
+    
+
+        
+        </ul>
+    </li>
+
+                
+            </ul>
+        </nav>
+        
+        <nav class="menu">
+            <header class="major">
+                <h2>SecureStorage</h2>
+            </header>
+            <ul class="top-level">
+                
+                    
+    
+    <li>
+        <a href="#summary">Summary</a>
+    </li>
+    
+
+                
+                    
+    
+    <li>
+        <a href="#description">Description</a>
+    </li>
+    
+
+                
+                    
+    <li>
+        <span class="opener">Methods</span>
+        <ul>
+        
+            
+    
+    <li>
+        <a href="#method__fun_init_context___ERROR_CLASS___encryptionKeyAlias__String___x500Principal__String___useOnlyWithHardwareSupport__Boolean_">fun init(context: &lt;ERROR CLASS&gt;, encryptionKeyAlias: String?, x500Principal: String?, useOnlyWithHardwareSupport: Boolean)</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_initSecureStorageKeys_context___ERROR_CLASS__">fun initSecureStorageKeys(context: &lt;ERROR CLASS&gt;)</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_deviceHasSecureHardwareSupport_context___ERROR_CLASS____Boolean">fun deviceHasSecureHardwareSupport(context: &lt;ERROR CLASS&gt;): Boolean</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_isKeyInsideSecureHardware__">fun isKeyInsideSecureHardware()</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_putString_context___ERROR_CLASS___key__String__value__String_">fun putString(context: &lt;ERROR CLASS&gt;, key: String, value: String)</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_putBoolean_context___ERROR_CLASS___key__String__value__Boolean_">fun putBoolean(context: &lt;ERROR CLASS&gt;, key: String, value: Boolean)</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_putFloat_context___ERROR_CLASS___key__String__value__Float_">fun putFloat(context: &lt;ERROR CLASS&gt;, key: String, value: Float)</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_putLong_context___ERROR_CLASS___key__String__value__Long_">fun putLong(context: &lt;ERROR CLASS&gt;, key: String, value: Long)</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_putInt_context___ERROR_CLASS___key__String__value__Int_">fun putInt(context: &lt;ERROR CLASS&gt;, key: String, value: Int)</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_getString_context___ERROR_CLASS___key__String__defaultValue__String___String">fun getString(context: &lt;ERROR CLASS&gt;, key: String, defaultValue: String): String</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_getBoolean_context___ERROR_CLASS___key__String__defaultValue__Boolean___Boolean">fun getBoolean(context: &lt;ERROR CLASS&gt;, key: String, defaultValue: Boolean): Boolean</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_getFloat_context___ERROR_CLASS___key__String__defaultValue__Float___Float">fun getFloat(context: &lt;ERROR CLASS&gt;, key: String, defaultValue: Float): Float</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_getLong_context___ERROR_CLASS___key__String__defaultValue__Long___Long">fun getLong(context: &lt;ERROR CLASS&gt;, key: String, defaultValue: Long): Long</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_getInt_context___ERROR_CLASS___key__String__defaultValue__Int___Int">fun getInt(context: &lt;ERROR CLASS&gt;, key: String, defaultValue: Int): Int</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_contains_context___ERROR_CLASS___key__String___Boolean">fun contains(context: &lt;ERROR CLASS&gt;, key: String): Boolean</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_remove_context___ERROR_CLASS___key__String_">fun remove(context: &lt;ERROR CLASS&gt;, key: String)</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_clearAllValues_context___ERROR_CLASS__">fun clearAllValues(context: &lt;ERROR CLASS&gt;)</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_clearAllValuesAndDeleteKeys_context___ERROR_CLASS__">fun clearAllValuesAndDeleteKeys(context: &lt;ERROR CLASS&gt;)</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_registerOnSecureStorageChangeListener_context___ERROR_CLASS___listener___ERROR_CLASS__">fun registerOnSecureStorageChangeListener(context: &lt;ERROR CLASS&gt;, listener: &lt;ERROR CLASS&gt;)</a>
+    </li>
+    
+
+        
+            
+    
+    <li>
+        <a href="#method__fun_unregisterOnSecureStorageChangeListener_context___ERROR_CLASS___listener___ERROR_CLASS__">fun unregisterOnSecureStorageChangeListener(context: &lt;ERROR CLASS&gt;, listener: &lt;ERROR CLASS&gt;)</a>
+    </li>
+    
+
+        
+        </ul>
+    </li>
+
+                
+            </ul>
+        </nav>
+        
+
+        <!-- Section -->
+        <section>
+            <p class="text-center">
+                Currently 0.0.4. Created with <a href="https://orchid.netlify.com">Orchid </a> and <b>Orchid Editorial Theme</b>.
+            </p>
+        </section>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <p class="copyright text-center">&copy; JavaEden. All rights reserved.<br>Design by <a href="https://html5up.net">HTML5 UP</a></p>
+        </footer>
+
+    </div>
+</div>
+</div>
+
+<!-- start:inject scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/skel/3.0.1/skel.min.js"></script>
+<script src="https://adorsys.github.io/secure-storage2-android/Editorial/d6bde1e3/assets/js/editorial_util.js"></script>
+<script src="https://adorsys.github.io/secure-storage2-android/Editorial/d6bde1e3/assets/js/editorial_main.js"></script>
+<script src="https://adorsys.github.io/secure-storage2-android/Editorial/d6bde1e3/assets/js/editorial_orchidCustomizations.js"></script>
+<script src="https://unpkg.com/lunr/lunr.js"></script>
+<script src="https://adorsys.github.io/secure-storage2-android/Editorial/d6bde1e3/assets/js/orchidSearch.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

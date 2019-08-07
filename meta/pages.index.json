@@ -1,0 +1,19 @@
+{
+  "ownKey": "pages",
+  "childrenPages": {"changelog": {
+    "ownKey": "changelog",
+    "ownPages": [{
+      "reference": {
+        "path": "",
+        "baseUrl": "https://adorsys.github.io/secure-storage2-android",
+        "fileName": "changelog",
+        "extension": "html",
+        "usePrettyUrl": true,
+        "link": "https://adorsys.github.io/secure-storage2-android/changelog"
+      },
+      "description": "",
+      "title": "Changelog",
+      "content": ""
+    }]
+  }}
+}

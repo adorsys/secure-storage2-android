@@ -1,0 +1,31 @@
+{
+  "ownKey": "home",
+  "ownPages": [
+    {
+      "reference": {
+        "path": "",
+        "baseUrl": "https://adorsys.github.io/secure-storage2-android",
+        "fileName": "",
+        "extension": "html",
+        "usePrettyUrl": true,
+        "link": "https://adorsys.github.io/secure-storage2-android"
+      },
+      "description": "",
+      "title": "SecureStorage2",
+      "content": ""
+    },
+    {
+      "reference": {
+        "path": "",
+        "baseUrl": "https://adorsys.github.io/secure-storage2-android",
+        "fileName": "404",
+        "extension": "html",
+        "usePrettyUrl": false,
+        "link": "https://adorsys.github.io/secure-storage2-android/404.html"
+      },
+      "description": "",
+      "title": "SecureStorage2",
+      "content": ""
+    }
+  ]
+}
