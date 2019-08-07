@@ -29,8 +29,6 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 import javax.security.auth.x500.X500Principal
 import de.adorsys.android.securestorage2.SecureStorageException
-import android.os.Build.VERSION_CODES
-import android.os.Build.VERSION
 import de.adorsys.android.securestorage2.SecureStorage
 import de.adorsys.android.securestorage2.execute
 import java.security.KeyStore
@@ -122,13 +120,8 @@ internal object KeyStoreToolApi21 {
     @Throws(SecureStorageException::class)
     private fun rsaKeyPairExists(keyStoreInstance: KeyStore): Boolean {
         try {
-            return when {
-                VERSION.SDK_INT >= VERSION_CODES.P -> // public key is retrieved via getCertificate
-                    keyStoreInstance.getCertificate(SecureStorage.ENCRYPTION_KEY_ALIAS) != null
-                            // private key is retrieved via getKey
-                            && keyStoreInstance.getKey(SecureStorage.ENCRYPTION_KEY_ALIAS, null) != null
-                else -> keyStoreInstance.getKey(SecureStorage.ENCRYPTION_KEY_ALIAS, null) != null
-            }
+            return keyStoreInstance.getCertificate(SecureStorage.ENCRYPTION_KEY_ALIAS) != null
+                    && keyStoreInstance.getKey(SecureStorage.ENCRYPTION_KEY_ALIAS, null) != null
         } catch (e: Exception) {
             throw SecureStorageException(
                 if (!e.message.isNullOrBlank()) e.message!!
@@ -266,17 +259,10 @@ internal object KeyStoreToolApi21 {
 
         try {
             when {
-                rsaKeyPairExists(keyStoreInstance) -> return when {
-                    VERSION.SDK_INT >= VERSION_CODES.P -> // only for P and newer versions
-                        keyStoreInstance.getKey(SecureStorage.ENCRYPTION_KEY_ALIAS, null) as PrivateKey
-                    else -> {
-                        val privateKeyEntry = keyStoreInstance.getEntry(
-                            SecureStorage.ENCRYPTION_KEY_ALIAS,
-                            null
-                        ) as KeyStore.PrivateKeyEntry
-                        privateKeyEntry.privateKey
-                    }
-                }
+                rsaKeyPairExists(keyStoreInstance) -> return keyStoreInstance.getKey(
+                    SecureStorage.ENCRYPTION_KEY_ALIAS,
+                    null
+                ) as PrivateKey
                 else -> throw SecureStorageException(
                     SecureStorageException.MESSAGE_KEYPAIR_DOES_NOT_EXIST,
                     null,
@@ -297,17 +283,8 @@ internal object KeyStoreToolApi21 {
     private fun getPublicKey(keyStoreInstance: KeyStore): PublicKey {
         try {
             when {
-                rsaKeyPairExists(keyStoreInstance) -> return when {
-                    VERSION.SDK_INT >= VERSION_CODES.P -> // only for P and newer versions
-                        keyStoreInstance.getCertificate(SecureStorage.ENCRYPTION_KEY_ALIAS).publicKey
-                    else -> {
-                        val privateKeyEntry = keyStoreInstance.getEntry(
-                            SecureStorage.ENCRYPTION_KEY_ALIAS,
-                            null
-                        ) as KeyStore.PrivateKeyEntry
-                        privateKeyEntry.certificate.publicKey
-                    }
-                }
+                rsaKeyPairExists(keyStoreInstance) ->
+                    return keyStoreInstance.getCertificate(SecureStorage.ENCRYPTION_KEY_ALIAS).publicKey
                 else -> throw SecureStorageException(
                     SecureStorageException.MESSAGE_KEYPAIR_DOES_NOT_EXIST,
                     null,
