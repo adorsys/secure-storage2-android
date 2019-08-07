@@ -42,5 +42,3 @@ task clean(type: Delete) {
 task('pV').doLast {
     println "${versionName}"
 }
-
-apply from: "$rootDir/detekt.gradle"
