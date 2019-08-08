@@ -1,18 +1,15 @@
 language: android
-
 dist: trusty
-
-jdk:
-  - oraclejdk8
-
+jdk: oraclejdk8
 sudo: true
 
 notifications:
   email: false
 
 env:
-  - SYS=21 ABI="default;armeabi-v7a"
-  - SYS=24 ABI="google_apis;arm64-v8a"
+  global:
+    - SYS=21 ABI="default;armeabi-v7a"
+    - SYS=24 ABI="google_apis;arm64-v8a"
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -28,33 +25,14 @@ android:
   components:
     - platform-tools
     - tools
-#    - build-tools-27.0.3
-#    - android-27
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
-    - addon-google_apis-google-19
-#    - android-21
-#    - sys-img-armeabi-v7a-android-21
-#    - android-24
-#    - sys-img-armeabi-v7a-android-24
 
 before_install:
-  # Install SDK license so Android Gradle plugin can install deps.
-  - mkdir "$ANDROID_HOME/licenses" || true
-  - echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
-  - sdkmanager "system-images;android-$SYS;$ABI" > /dev/null
   - # Accept licenses before installing components, no need to echo y for each component
   - yes | sdkmanager "platforms;android-$SYS"
   - touch local.properties
   - chmod +x gradlew
-  #  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
-  # Platform tools
-  - sdkmanager "emulator" "tools" "platform-tools" > /dev/null
-  - sdkmanager --list | head -15
-  # install older build tools (for emulator)
-  - sdkmanager "build-tools;25.0.2" "platforms;android-25" > /dev/null
-  # Create and start emulator.
+  - chmod +x scripts/android-wait-for-emulator.sh
+  - android list targets
   - sdkmanager "system-images;android-$SYS;$ABI" > /dev/null
   - sdkmanager --list | head -15
   - echo no | avdmanager create avd -n test -k "system-images;android-$SYS;$ABI"
@@ -72,7 +50,7 @@ before_install:
 
 before_script:
   - ./scripts/android-wait-for-emulator.sh
-#  - android-wait-for-emulator
+  #  - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
 script:
