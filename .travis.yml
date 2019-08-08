@@ -11,10 +11,10 @@ cache:
     - $HOME/.gradle
 
 env:
-  - SYS=21 ABI="default;armeabi-v7a"
-  - SYS=24 ABI="google_apis;arm64-v8a"
   global:
     - ADB_INSTALL_TIMEOUT=8
+  - SYS=21 ABI="default;armeabi-v7a"
+  - SYS=24 ABI="google_apis;arm64-v8a"
 
 before_install:
   # Install SDK license so Android Gradle plugin can install deps.
