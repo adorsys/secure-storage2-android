@@ -6,57 +6,38 @@ sudo: true
 notifications:
   email: false
 
-env:
-  global:
-    - SYS=21 ABI="default;armeabi-v7a"
-    - SYS=24 ABI="google_apis;arm64-v8a"
-
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-    - $HOME/.android/build-cache
+    - $HOME/.gradle
 
-android:
-  components:
-    - platform-tools
-    - tools
+env:
+  - SYS=21 ABI="default;armeabi-v7a"
+  - SYS=24 ABI="google_apis;arm64-v8a"
+  global:
+    - ADB_INSTALL_TIMEOUT=8
 
 before_install:
-  - # Accept licenses before installing components, no need to echo y for each component
-  - yes | sdkmanager "platforms;android-$SYS"
-  - touch local.properties
-  - chmod +x gradlew
-  - chmod +x scripts/android-wait-for-emulator.sh
-  - android list targets
-  - sdkmanager "system-images;android-$SYS;$ABI" > /dev/null
-  - sdkmanager --list | head -15
-  - echo no | avdmanager create avd -n test -k "system-images;android-$SYS;$ABI"
-  # emulator debug options
-  - EMU_DEBUG="-debug all -logcat *:e -verbose -show-kernel"
-  - EMU_ADDITIONAL_OPTIONS="-camera-back none -camera-front none -memory 2048"
-  - |
-    if [[ "${SYS}${ABI}" == "25google_apis;armeabi-v7a" || "${SYS}${ABI}" == "24google_apis;armeabi-v7a" ]]; then
-      EMU_PARAMS="-no-window -gpu swiftshader"
-    else
-      EMU_PARAMS="-no-boot-anim -gpu off"
-    fi
-    # use the absolute emulator path in case older version installed (on default path)
-    $ANDROID_HOME/emulator/emulator -avd test -no-audio $EMU_PARAMS $EMU_ADDITIONAL_OPTIONS ${EMU_DEBUG} &
+  # Install SDK license so Android Gradle plugin can install deps.
+  - mkdir "$ANDROID_HOME/licenses" || true
+  - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
+  # Install the rest of tools (e.g., avdmanager).
+  - sdkmanager tools
+  # Install the system image.
+  - sdkmanager "system-images;android-$SYS;$ABI"
+  # Create and start emulator for the script. Meant to race the install task.
+  - echo no | avdmanager create avd --force -n test -k "system-images;android-$SYS;$ABI"
+  - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
+
+install: ./gradlew clean assemble --stacktrace
 
 before_script:
-  - ./scripts/android-wait-for-emulator.sh
-  #  - android-wait-for-emulator
+  - android-wait-for-emulator
+  - adb shell settings put global window_animation_scale 0 &
+  - adb shell settings put global transition_animation_scale 0 &
+  - adb shell settings put global animator_duration_scale 0 &
   - adb shell input keyevent 82 &
 
-script:
-  - ./gradlew clean check --parallel
-  - ./gradlew detekt
-  - ./gradlew connectedCheck
+script: ./gradlew check connectedCheck --stacktrace
 
 after_success:
   - .buildscript/deploy_snapshot.sh
