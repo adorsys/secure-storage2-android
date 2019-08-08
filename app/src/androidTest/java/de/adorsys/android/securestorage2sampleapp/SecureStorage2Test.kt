@@ -47,7 +47,7 @@ open class SecureStorage2Test {
         // Generate SecureStorage keys
         SecureStorage.initSecureStorageKeys(activityRule.activity.applicationContext)
 
-        activityRule.runOnUiThread {
+        activityRule.activity.runOnUiThread {
             val keyguardManager = activityRule.activity.getSystemService(KEYGUARD_SERVICE) as KeyguardManager
             val keyguardLock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE)
             keyguardLock.disableKeyguard()
