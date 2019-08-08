@@ -15,6 +15,10 @@ import de.adorsys.android.securestorage2.SecureStorageException
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
+import android.view.WindowManager
+import android.content.Context.KEYGUARD_SERVICE
+import android.app.KeyguardManager
+
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -42,6 +46,21 @@ open class SecureStorage2Test {
 
         // Generate SecureStorage keys
         SecureStorage.initSecureStorageKeys(activityRule.activity.applicationContext)
+
+        activityRule.runOnUiThread {
+            val keyguardManager = activityRule.activity.getSystemService(KEYGUARD_SERVICE) as KeyguardManager
+            val keyguardLock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE)
+            keyguardLock.disableKeyguard()
+
+            //turn the screen on
+            activityRule.activity.window.addFlags(
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                        or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                        or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                        or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                        or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+            )
+        }
     }
 
     @Test
