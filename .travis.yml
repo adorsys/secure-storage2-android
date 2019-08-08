@@ -44,6 +44,12 @@ env:
     - API=24
     - API=25
 
+matrix:
+  allow_failures:
+    - env: API=22
+    - env: API=24
+    - env: API=25
+
 # Emulator Management: Create, Start and Wait
 install:
   - echo 'count=0' > /home/travis/.android/repositories.cfg # Avoid harmless sdkmanager warning

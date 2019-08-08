@@ -19,7 +19,6 @@ import android.view.WindowManager
 import android.content.Context.KEYGUARD_SERVICE
 import android.app.KeyguardManager
 
-
 /**
  * Instrumented test, which will execute on an Android device.
  *
@@ -49,7 +48,7 @@ open class SecureStorage2Test {
 
         activityRule.activity.runOnUiThread {
             val keyguardManager = activityRule.activity.getSystemService(KEYGUARD_SERVICE) as KeyguardManager
-            val keyguardLock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE)
+            @Suppress("DEPRECATION") val keyguardLock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE)
             keyguardLock.disableKeyguard()
 
             //turn the screen on
