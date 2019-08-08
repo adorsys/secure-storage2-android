@@ -17,6 +17,17 @@ env:
     - SYS=21 ABI="default;armeabi-v7a"
     - SYS=24 ABI="google_apis;arm64-v8a"
 
+android:
+  components:
+    - build-tools-24.0.2
+    - android-24
+    - add-on
+    - extra
+  licenses:
+    - 'android-sdk-preview-license-52d11cd2'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
+
 before_install:
   # Install SDK license so Android Gradle plugin can install deps.
   - mkdir "$ANDROID_HOME/licenses" || true
