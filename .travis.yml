@@ -37,11 +37,10 @@ matrix:
       stage: test
     - env: API=25
       stage: test
-    - env: DEPLOY_TO_JCENTER=yes
+    - env: API=21
       before_script: skip
       script:
-        - ./gradlew :securestorage2:clean
-        - ./gradlew :securestorage2:install
+        - bash .buildscript/build-and-deploy-snapshot.sh
       stage: deploy
 
 android:
@@ -74,22 +73,15 @@ install:
   - echo y | sdkmanager "platforms;android-28" >/dev/null # We need the API of the current compileSdkVersion from gradle.properties
   - echo y | sdkmanager --channel=4 "emulator" >/dev/null # Use canary channel to get emulator 29.x for x86_64 image support
 
-before_script:
-  - echo y | sdkmanager "extras;android;m2repository" >/dev/null
-  - echo y | sdkmanager "system-images;android-$API;$EMU_FLAVOR;$ABI" >/dev/null # install our emulator
-  - echo no | avdmanager create avd --force -n test -k "system-images;android-$API;$EMU_FLAVOR;$ABI" -c 10M
-  - emulator -verbose -avd test -no-accel -no-snapshot -no-window $AUDIO -camera-back none -camera-front none -selinux permissive -qemu -m 2048 &
-  - ./.buildscript/android-wait-for-emulator.sh
-  - adb shell settings put global window_animation_scale 0 &
-  - adb shell settings put global transition_animation_scale 0 &
-  - adb shell settings put global animator_duration_scale 0 &
-  - adb shell input keyevent 82 &
-
-script: bash .buildscript/run-android-tests.sh
-
-deploy:
-  provider: script
-  script: ./gradlew :securestorage2:bintrayUpload
-  on:
-    all_branches: true
-    condition: "$DEPLOY_TO_JCENTER = yes && $TRAVIS_BRANCH = master"
+#before_script:
+#  - echo y | sdkmanager "extras;android;m2repository" >/dev/null
+#  - echo y | sdkmanager "system-images;android-$API;$EMU_FLAVOR;$ABI" >/dev/null # install our emulator
+#  - echo no | avdmanager create avd --force -n test -k "system-images;android-$API;$EMU_FLAVOR;$ABI" -c 10M
+#  - emulator -verbose -avd test -no-accel -no-snapshot -no-window $AUDIO -camera-back none -camera-front none -selinux permissive -qemu -m 2048 &
+#  - ./.buildscript/android-wait-for-emulator.sh
+#  - adb shell settings put global window_animation_scale 0 &
+#  - adb shell settings put global transition_animation_scale 0 &
+#  - adb shell settings put global animator_duration_scale 0 &
+#  - adb shell input keyevent 82 &
+#
+#script: bash .buildscript/run-android-tests.sh
