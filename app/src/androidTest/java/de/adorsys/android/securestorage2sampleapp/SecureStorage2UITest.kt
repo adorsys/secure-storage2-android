@@ -15,11 +15,14 @@ import org.junit.runner.RunWith
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
+@Suppress("LocalVariableName")
 @RunWith(AndroidJUnit4ClassRunner::class)
 open class SecureStorage2UITest : SecureStorage2BaseTest() {
 
     @Test
     fun testUI() {
+        val KEY = "KEY_TEST"
+        val VALUE = "KEY_VALUE"
         val context = activityRule.activity.applicationContext
 
         SecureStorage.clearAllValuesAndDeleteKeys(context)
@@ -78,10 +81,5 @@ open class SecureStorage2UITest : SecureStorage2BaseTest() {
         Log.d("SecureStorage2UITest Get Data End Time", System.currentTimeMillis().toString())
 
         SecureStorage.clearAllValuesAndDeleteKeys(context)
-    }
-
-    companion object {
-        internal const val KEY = "KEY_TEST"
-        internal const val VALUE = "KEY_VALUE"
     }
 }

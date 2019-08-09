@@ -28,7 +28,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.initSecureStorageKeys(context)
 
         // Check if INSTALLATION_FLAG exists in SecureStorage
-        assertInstallationFlagExists(context)
+        assertInstallationFlag(context, true)
 
         // Store a simple String value in SecureStorage
         SecureStorage.putString(context, KEY_STRING, VALUE_STRING)
@@ -37,7 +37,10 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         Assert.assertTrue(SecureStorage.contains(context, KEY_STRING))
 
         // Retrieve the previously stored String value from the SecureStorage
-        val retrievedValue = SecureStorage.getString(context, KEY_STRING, "FAILED")
+        val retrievedValue = SecureStorage.getString(context, KEY_STRING, null)
+
+        // Check if the retrievedValue is not null
+        Assert.assertNotNull(retrievedValue)
 
         // Check if the retrievedValue equals the pre-stored value
         Assert.assertEquals(VALUE_STRING, retrievedValue)
@@ -52,7 +55,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.clearAllValuesAndDeleteKeys(context)
 
         // Check if INSTALLATION_FLAG is no longer in SecureStorage, which would mean SecureStorage was cleared
-        Assert.assertFalse(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+        assertInstallationFlag(context, false)
     }
 
     @Test
@@ -65,7 +68,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.initSecureStorageKeys(context)
 
         // Check if INSTALLATION_FLAG exists in SecureStorage
-        assertInstallationFlagExists(context)
+        assertInstallationFlag(context, true)
 
         // Store a simple Boolean value in SecureStorage
         SecureStorage.putBoolean(context, KEY_BOOLEAN, VALUE_BOOLEAN)
@@ -74,7 +77,10 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         Assert.assertTrue(SecureStorage.contains(context, KEY_BOOLEAN))
 
         // Retrieve the previously stored Boolean value from the SecureStorage
-        val retrievedValue = SecureStorage.getBoolean(context, KEY_BOOLEAN, false)
+        val retrievedValue = SecureStorage.getBoolean(context, KEY_BOOLEAN, null)
+
+        // Check if the retrievedValue is not null
+        Assert.assertNotNull(retrievedValue)
 
         // Check if the retrievedValue equals the pre-stored value
         Assert.assertEquals(VALUE_BOOLEAN, retrievedValue)
@@ -89,7 +95,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.clearAllValuesAndDeleteKeys(context)
 
         // Check if INSTALLATION_FLAG is no longer in SecureStorage, which would mean SecureStorage was cleared
-        Assert.assertFalse(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+        assertInstallationFlag(context, false)
     }
 
     @Test
@@ -102,7 +108,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.initSecureStorageKeys(context)
 
         // Check if INSTALLATION_FLAG exists in SecureStorage
-        assertInstallationFlagExists(context)
+        assertInstallationFlag(context, true)
 
         // Store a simple Int value in SecureStorage
         SecureStorage.putInt(context, KEY_INT, VALUE_INT)
@@ -111,7 +117,10 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         Assert.assertTrue(SecureStorage.contains(context, KEY_INT))
 
         // Retrieve the previously stored Int value from the SecureStorage
-        val retrievedValue = SecureStorage.getInt(context, KEY_INT, 93)
+        val retrievedValue = SecureStorage.getInt(context, KEY_INT, null)
+
+        // Check if the retrievedValue is not null
+        Assert.assertNotNull(retrievedValue)
 
         // Check if the retrievedValue equals the pre-stored value
         Assert.assertEquals(VALUE_INT, retrievedValue)
@@ -126,7 +135,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.clearAllValuesAndDeleteKeys(context)
 
         // Check if INSTALLATION_FLAG is no longer in SecureStorage, which would mean SecureStorage was cleared
-        Assert.assertFalse(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+        assertInstallationFlag(context, false)
     }
 
     @Test
@@ -139,7 +148,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.initSecureStorageKeys(context)
 
         // Check if INSTALLATION_FLAG exists in SecureStorage
-        assertInstallationFlagExists(context)
+        assertInstallationFlag(context, true)
 
         // Store a simple Long value in SecureStorage
         SecureStorage.putLong(context, KEY_LONG, VALUE_LONG)
@@ -148,7 +157,10 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         Assert.assertTrue(SecureStorage.contains(context, KEY_LONG))
 
         // Retrieve the previously stored Long value from the SecureStorage
-        val retrievedValue = SecureStorage.getLong(context, KEY_LONG, 93)
+        val retrievedValue = SecureStorage.getLong(context, KEY_LONG, null)
+
+        // Check if the retrievedValue is not null
+        Assert.assertNotNull(retrievedValue)
 
         // Check if the retrievedValue equals the pre-stored value
         Assert.assertEquals(VALUE_LONG, retrievedValue)
@@ -163,7 +175,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.clearAllValuesAndDeleteKeys(context)
 
         // Check if INSTALLATION_FLAG is no longer in SecureStorage, which would mean SecureStorage was cleared
-        Assert.assertFalse(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+        assertInstallationFlag(context, false)
     }
 
     @Test
@@ -176,7 +188,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.initSecureStorageKeys(context)
 
         // Check if INSTALLATION_FLAG exists in SecureStorage
-        assertInstallationFlagExists(context)
+        assertInstallationFlag(context, true)
 
         // Store a simple Double value in SecureStorage
         SecureStorage.putDouble(context, KEY_DOUBLE, VALUE_DOUBLE)
@@ -185,7 +197,10 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         Assert.assertTrue(SecureStorage.contains(context, KEY_DOUBLE))
 
         // Retrieve the previously stored Double value from the SecureStorage
-        val retrievedValue = SecureStorage.getDouble(context, KEY_DOUBLE, 93.0)
+        val retrievedValue = SecureStorage.getDouble(context, KEY_DOUBLE, null)
+
+        // Check if the retrievedValue is not null
+        Assert.assertNotNull(retrievedValue)
 
         // Check if the retrievedValue equals the pre-stored value
         Assert.assertEquals(VALUE_DOUBLE, retrievedValue, 0.0)
@@ -200,7 +215,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.clearAllValuesAndDeleteKeys(context)
 
         // Check if INSTALLATION_FLAG is no longer in SecureStorage, which would mean SecureStorage was cleared
-        Assert.assertFalse(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+        assertInstallationFlag(context, false)
     }
 
     @Test
@@ -213,7 +228,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.initSecureStorageKeys(context)
 
         // Check if INSTALLATION_FLAG exists in SecureStorage
-        assertInstallationFlagExists(context)
+        assertInstallationFlag(context, true)
 
         // Store a simple Float value in SecureStorage
         SecureStorage.putFloat(context, KEY_FLOAT, VALUE_FLOAT)
@@ -222,7 +237,10 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         Assert.assertTrue(SecureStorage.contains(context, KEY_FLOAT))
 
         // Retrieve the previously stored Float value from the SecureStorage
-        val retrievedValue = SecureStorage.getFloat(context, KEY_FLOAT, 93.0f)
+        val retrievedValue = SecureStorage.getFloat(context, KEY_FLOAT, null)
+
+        // Check if the retrievedValue is not null
+        Assert.assertNotNull(retrievedValue)
 
         // Check if the retrievedValue equals the pre-stored value
         Assert.assertEquals(VALUE_FLOAT, retrievedValue)
@@ -237,18 +255,20 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.clearAllValuesAndDeleteKeys(context)
 
         // Check if INSTALLATION_FLAG is no longer in SecureStorage, which would mean SecureStorage was cleared
-        Assert.assertFalse(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+        assertInstallationFlag(context, false)
     }
 
-    private fun assertInstallationFlagExists(context: Context) {
+    private fun assertInstallationFlag(context: Context, shouldExist: Boolean) {
+        val INSTALLATION_FLAG_KEY = "INSTALLATION_API_VERSION_UNDER_M"
         // INSTALLATION_FLAG is set only on API 21 & 22
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            // Check if INSTALLATION_FLAG exists in SecureStorage
-            Assert.assertTrue(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+            if (shouldExist) {
+                // Check if INSTALLATION_FLAG exists in SecureStorage
+                Assert.assertTrue(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+            } else {
+                // Check if INSTALLATION_FLAG exists in SecureStorage
+                Assert.assertFalse(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+            }
         }
-    }
-
-    companion object {
-        internal const val INSTALLATION_FLAG_KEY = "INSTALLATION_API_VERSION_UNDER_M"
     }
 }
