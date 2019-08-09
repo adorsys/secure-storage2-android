@@ -18,6 +18,51 @@ branches:
   except:
     - gh-pages
 
+stages:
+  - test
+  - deploy
+  - if: branch = master
+    name: deploy
+
+matrix:
+  fast_finish: true
+  include:
+    -
+      dist: trusty
+      env: API=21
+      script: bundle exec rake beaker
+      services: docker
+      stage: test
+      sudo: false
+    -
+      dist: trusty
+      env: API=22
+      script: bundle exec rake beaker
+      services: docker
+      stage: test
+      sudo: false
+    -
+      dist: trusty
+      env: API=23
+      script: bundle exec rake beaker
+      services: docker
+      stage: test
+      sudo: false
+    -
+      dist: trusty
+      env: API=24
+      script: bundle exec rake beaker
+      services: docker
+      stage: test
+      sudo: false
+    -
+      dist: trusty
+      env: API=25
+      script: bundle exec rake beaker
+      services: docker
+      stage: test
+      sudo: false
+
 android:
   components:
     # installing tools to start, then use `sdkmanager` below to get the rest
@@ -37,12 +82,12 @@ env:
     - ANDROID_HOME=/usr/local/android-sdk
     - TOOLS=${ANDROID_HOME}/tools
     - PATH=${ANDROID_HOME}:${ANDROID_HOME}/emulator:${TOOLS}:${TOOLS}/bin:${ANDROID_HOME}/platform-tools:${PATH}
-  matrix:
-    - API=21
-    - API=22
-    - API=23
-    - API=24
-    - API=25
+#  matrix:
+#    - API=21
+#    - API=22
+#    - API=23
+#    - API=24
+#    - API=25
 
 # Emulator Management: Create, Start and Wait
 install:
@@ -69,7 +114,5 @@ before_script:
 
 script: bash .buildscript/run-android-tests.sh
 
-deploy:
-  provider: script
-  script: bash .buildscript/deploy_snapshot.sh
-  env: API=25
+after_success:
+  - bash .buildscript/deploy_snapshot.sh
