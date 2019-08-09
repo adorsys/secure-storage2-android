@@ -84,4 +84,10 @@ install:
 #  - adb shell settings put global animator_duration_scale 0 &
 #  - adb shell input keyevent 82 &
 #
+
+before_script:
+  - echo "Test"
+
 #script: bash .buildscript/run-android-tests.sh
+
+script: ./gradlew assembleDebug
