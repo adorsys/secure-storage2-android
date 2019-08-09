@@ -27,41 +27,38 @@ stages:
 matrix:
   fast_finish: true
   include:
-    -
-      dist: trusty
+    - dist: trusty
       env: API=21
       script: bundle exec rake beaker
       services: docker
       stage: test
       sudo: false
-    -
-      dist: trusty
+    - dist: trusty
       env: API=22
       script: bundle exec rake beaker
       services: docker
       stage: test
       sudo: false
-    -
-      dist: trusty
+    - dist: trusty
       env: API=23
       script: bundle exec rake beaker
       services: docker
       stage: test
       sudo: false
-    -
-      dist: trusty
+    - dist: trusty
       env: API=24
       script: bundle exec rake beaker
       services: docker
       stage: test
       sudo: false
-    -
-      dist: trusty
+    - dist: trusty
       env: API=25
       script: bundle exec rake beaker
       services: docker
       stage: test
       sudo: false
+    - env: DEPLOY_TO_JCENTER=yes
+      stage: deploy
 
 android:
   components:
@@ -114,5 +111,9 @@ before_script:
 
 script: bash .buildscript/run-android-tests.sh
 
-after_success:
-  - bash .buildscript/deploy_snapshot.sh
+deploy:
+  provider: script
+  script: bash .buildscript/deploy_snapshot.sh
+  on:
+    all_branches: true
+    condition: "$DEPLOY_TO_JCENTER = yes"
