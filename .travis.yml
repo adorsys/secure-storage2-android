@@ -44,12 +44,6 @@ env:
     - API=24
     - API=25
 
-#matrix:
-#  allow_failures:
-#    - env: API=22
-#    - env: API=24
-#    - env: API=25
-
 # Emulator Management: Create, Start and Wait
 install:
   - echo 'count=0' > /home/travis/.android/repositories.cfg # Avoid harmless sdkmanager warning
@@ -73,7 +67,7 @@ before_script:
   - adb shell settings put global animator_duration_scale 0 &
   - adb shell input keyevent 82 &
 
-script: ./gradlew app:connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=de.adorsys.android.securestorage2sampleapp.SecureStorage2LogicTest --stacktrace
+script: ./scripts/run-android-tests.sh
 
 after_success:
   - .buildscript/deploy_snapshot.sh
