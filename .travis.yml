@@ -27,37 +27,21 @@ stages:
 matrix:
   fast_finish: true
   include:
-    - dist: trusty
-      env: API=21
-      script: bundle exec rake beaker
-      services: docker
+    - env: API=21
       stage: test
-      sudo: false
-    - dist: trusty
-      env: API=22
-      script: bundle exec rake beaker
-      services: docker
+    - env: API=22
       stage: test
-      sudo: false
-    - dist: trusty
-      env: API=23
-      script: bundle exec rake beaker
-      services: docker
+    - env: API=23
       stage: test
-      sudo: false
-    - dist: trusty
-      env: API=24
-      script: bundle exec rake beaker
-      services: docker
+    - env: API=24
       stage: test
-      sudo: false
-    - dist: trusty
-      env: API=25
-      script: bundle exec rake beaker
-      services: docker
+    - env: API=25
       stage: test
-      sudo: false
     - env: DEPLOY_TO_JCENTER=yes
+      before_script: skip
+      script:
+        - ./gradlew :securestorage2:clean
+        - ./gradlew :securestorage2:install
       stage: deploy
 
 android:
@@ -79,12 +63,6 @@ env:
     - ANDROID_HOME=/usr/local/android-sdk
     - TOOLS=${ANDROID_HOME}/tools
     - PATH=${ANDROID_HOME}:${ANDROID_HOME}/emulator:${TOOLS}:${TOOLS}/bin:${ANDROID_HOME}/platform-tools:${PATH}
-#  matrix:
-#    - API=21
-#    - API=22
-#    - API=23
-#    - API=24
-#    - API=25
 
 # Emulator Management: Create, Start and Wait
 install:
@@ -95,15 +73,13 @@ install:
   - echo y | sdkmanager "platforms;android-$API" >/dev/null # We need the API of the emulator we will run
   - echo y | sdkmanager "platforms;android-28" >/dev/null # We need the API of the current compileSdkVersion from gradle.properties
   - echo y | sdkmanager --channel=4 "emulator" >/dev/null # Use canary channel to get emulator 29.x for x86_64 image support
+
+before_script:
   - echo y | sdkmanager "extras;android;m2repository" >/dev/null
   - echo y | sdkmanager "system-images;android-$API;$EMU_FLAVOR;$ABI" >/dev/null # install our emulator
   - echo no | avdmanager create avd --force -n test -k "system-images;android-$API;$EMU_FLAVOR;$ABI" -c 10M
   - emulator -verbose -avd test -no-accel -no-snapshot -no-window $AUDIO -camera-back none -camera-front none -selinux permissive -qemu -m 2048 &
   - ./.buildscript/android-wait-for-emulator.sh
-  - adb shell input keyevent 82 &
-
-before_script:
-  - android-wait-for-emulator
   - adb shell settings put global window_animation_scale 0 &
   - adb shell settings put global transition_animation_scale 0 &
   - adb shell settings put global animator_duration_scale 0 &
@@ -113,7 +89,7 @@ script: bash .buildscript/run-android-tests.sh
 
 deploy:
   provider: script
-  script: bash .buildscript/deploy_snapshot.sh
+  script: ./gradlew :securestorage2:bintrayUpload
   on:
     all_branches: true
-    condition: "$DEPLOY_TO_JCENTER = yes"
+    condition: "$DEPLOY_TO_JCENTER = yes && $TRAVIS_BRANCH = master"
