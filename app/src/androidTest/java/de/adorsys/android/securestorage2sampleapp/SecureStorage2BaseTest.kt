@@ -27,11 +27,6 @@ open class SecureStorage2BaseTest {
             useOnlyWithHardwareSupport = false
         )
 
-        SecureStorage.clearAllValuesAndDeleteKeys(activityRule.activity.applicationContext)
-
-        // Generate SecureStorage keys
-        SecureStorage.initSecureStorageKeys(activityRule.activity.applicationContext)
-
         activityRule.activity.runOnUiThread {
             val keyguardManager = activityRule.activity.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
             @Suppress("DEPRECATION") val keyguardLock = keyguardManager.newKeyguardLock(Context.KEYGUARD_SERVICE)
@@ -46,10 +41,5 @@ open class SecureStorage2BaseTest {
                         or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
             )
         }
-    }
-
-    companion object {
-        const val KEY = "KEY_TEST"
-        const val VALUE = "KEY_VALUE"
     }
 }

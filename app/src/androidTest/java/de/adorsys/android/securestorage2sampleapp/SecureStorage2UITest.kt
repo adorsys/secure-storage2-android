@@ -20,7 +20,12 @@ open class SecureStorage2UITest : SecureStorage2BaseTest() {
 
     @Test
     fun testUI() {
-        SecureStorage.clearAllValues(activityRule.activity.applicationContext)
+        val context = activityRule.activity.applicationContext
+
+        SecureStorage.clearAllValuesAndDeleteKeys(context)
+
+        // Generate SecureStorage keys
+        SecureStorage.initSecureStorageKeys(context)
 
         // Store Data Section
 
@@ -72,6 +77,11 @@ open class SecureStorage2UITest : SecureStorage2BaseTest() {
 
         Log.d("SecureStorage2UITest Get Data End Time", System.currentTimeMillis().toString())
 
-        SecureStorage.clearAllValues(activityRule.activity.applicationContext)
+        SecureStorage.clearAllValuesAndDeleteKeys(context)
+    }
+
+    companion object {
+        internal const val KEY = "KEY_TEST"
+        internal const val VALUE = "KEY_VALUE"
     }
 }
