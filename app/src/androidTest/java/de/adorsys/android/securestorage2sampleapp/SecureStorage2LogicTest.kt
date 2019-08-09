@@ -2,6 +2,8 @@
 
 package de.adorsys.android.securestorage2sampleapp
 
+import android.content.Context
+import android.os.Build
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import de.adorsys.android.securestorage2.SecureStorage
 import org.junit.Assert
@@ -26,7 +28,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.initSecureStorageKeys(context)
 
         // Check if INSTALLATION_FLAG exists in SecureStorage
-        Assert.assertTrue(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+        assertInstallationFlagExists(context)
 
         // Store a simple String value in SecureStorage
         SecureStorage.putString(context, KEY_STRING, VALUE_STRING)
@@ -63,7 +65,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.initSecureStorageKeys(context)
 
         // Check if INSTALLATION_FLAG exists in SecureStorage
-        Assert.assertTrue(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+        assertInstallationFlagExists(context)
 
         // Store a simple Boolean value in SecureStorage
         SecureStorage.putBoolean(context, KEY_BOOLEAN, VALUE_BOOLEAN)
@@ -100,7 +102,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.initSecureStorageKeys(context)
 
         // Check if INSTALLATION_FLAG exists in SecureStorage
-        Assert.assertTrue(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+        assertInstallationFlagExists(context)
 
         // Store a simple Int value in SecureStorage
         SecureStorage.putInt(context, KEY_INT, VALUE_INT)
@@ -137,7 +139,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.initSecureStorageKeys(context)
 
         // Check if INSTALLATION_FLAG exists in SecureStorage
-        Assert.assertTrue(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+        assertInstallationFlagExists(context)
 
         // Store a simple Long value in SecureStorage
         SecureStorage.putLong(context, KEY_LONG, VALUE_LONG)
@@ -174,7 +176,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.initSecureStorageKeys(context)
 
         // Check if INSTALLATION_FLAG exists in SecureStorage
-        Assert.assertTrue(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+        assertInstallationFlagExists(context)
 
         // Store a simple Double value in SecureStorage
         SecureStorage.putDouble(context, KEY_DOUBLE, VALUE_DOUBLE)
@@ -211,7 +213,7 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         SecureStorage.initSecureStorageKeys(context)
 
         // Check if INSTALLATION_FLAG exists in SecureStorage
-        Assert.assertTrue(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+        assertInstallationFlagExists(context)
 
         // Store a simple Float value in SecureStorage
         SecureStorage.putFloat(context, KEY_FLOAT, VALUE_FLOAT)
@@ -236,6 +238,14 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
 
         // Check if INSTALLATION_FLAG is no longer in SecureStorage, which would mean SecureStorage was cleared
         Assert.assertFalse(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+    }
+
+    private fun assertInstallationFlagExists(context: Context) {
+        // INSTALLATION_FLAG is set only on API 21 & 22
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            // Check if INSTALLATION_FLAG exists in SecureStorage
+            Assert.assertTrue(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+        }
     }
 
     companion object {
