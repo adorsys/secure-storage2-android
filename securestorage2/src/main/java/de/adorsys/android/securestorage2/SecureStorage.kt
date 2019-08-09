@@ -24,6 +24,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import de.adorsys.android.securestorage2.internal.KeyStoreTool
 import java.lang.Boolean.parseBoolean
+import java.lang.Double.parseDouble
 import java.lang.Float.parseFloat
 import java.lang.Integer.parseInt
 import java.lang.Long.parseLong
@@ -134,7 +135,7 @@ object SecureStorage {
 
     /**
      *
-     * Takes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device
+     * Takes plain boolean value, encrypts it and stores it encrypted in the SecureStorage on the Android Device
      *
      * @param context Context is used internally
      * @param key Key used to identify the stored value in SecureStorage
@@ -147,20 +148,19 @@ object SecureStorage {
 
     /**
      *
-     * Takes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device
+     * Takes plain int value, encrypts it and stores it encrypted in the SecureStorage on the Android Device
      *
      * @param context Context is used internally
      * @param key Key used to identify the stored value in SecureStorage
-     * @param value Plain float value that will be encrypted and stored in the SecureStorage
+     * @param value Plain int value that will be encrypted and stored in the SecureStorage
      *
      */
     @Throws(SecureStorageException::class)
-    fun putFloat(context: Context, key: String, value: Float) =
-        putString(context.applicationContext, key, value.toString())
+    fun putInt(context: Context, key: String, value: Int) = putString(context.applicationContext, key, value.toString())
 
     /**
      *
-     * Takes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device
+     * Takes plain long value, encrypts it and stores it encrypted in the SecureStorage on the Android Device
      *
      * @param context Context is used internally
      * @param key Key used to identify the stored value in SecureStorage
@@ -173,15 +173,29 @@ object SecureStorage {
 
     /**
      *
-     * Takes plain string value, encrypts it and stores it encrypted in the SecureStorage on the Android Device
+     * Takes plain double value, encrypts it and stores it encrypted in the SecureStorage on the Android Device
      *
      * @param context Context is used internally
      * @param key Key used to identify the stored value in SecureStorage
-     * @param value Plain int value that will be encrypted and stored in the SecureStorage
+     * @param value Plain double value that will be encrypted and stored in the SecureStorage
      *
      */
     @Throws(SecureStorageException::class)
-    fun putInt(context: Context, key: String, value: Int) = putString(context.applicationContext, key, value.toString())
+    fun putDouble(context: Context, key: String, value: Double) =
+        putString(context.applicationContext, key, value.toString())
+
+    /**
+     *
+     * Takes plain float value, encrypts it and stores it encrypted in the SecureStorage on the Android Device
+     *
+     * @param context Context is used internally
+     * @param key Key used to identify the stored value in SecureStorage
+     * @param value Plain float value that will be encrypted and stored in the SecureStorage
+     *
+     */
+    @Throws(SecureStorageException::class)
+    fun putFloat(context: Context, key: String, value: Float) =
+        putString(context.applicationContext, key, value.toString())
 
     /**
      *
@@ -232,19 +246,18 @@ object SecureStorage {
 
     /**
      *
-     * Gets encrypted float value for given key from the SecureStorage on the Android Device, decrypts it
-     * and returns it
+     * Gets encrypted int value for given key  from the SecureStorage on the Android Device, decrypts it and returns it
      *
      * @param context Context is used internally
      * @param key Key used to identify the stored value in SecureStorage
-     * @param defaultValue Default float value that will be returned if the value with given key doesn't exist or
+     * @param defaultValue Default int value that will be returned if the value with given key doesn't exist or
      * an exception is thrown
      *
-     * @return Decrypted float value associated with given key from SecureStorage
+     * @return Decrypted int value associated with given key from SecureStorage
      *
      */
-    fun getFloat(context: Context, key: String, defaultValue: Float): Float =
-        parseFloat(getString(context.applicationContext, key, defaultValue.toString()))
+    fun getInt(context: Context, key: String, defaultValue: Int): Int =
+        parseInt(getString(context.applicationContext, key, defaultValue.toString()))
 
     /**
      *
@@ -263,18 +276,35 @@ object SecureStorage {
 
     /**
      *
-     * Gets encrypted int value for given key  from the SecureStorage on the Android Device, decrypts it and returns it
+     * Gets encrypted double value for given key from the SecureStorage on the Android Device, decrypts it
+     * and returns it
      *
      * @param context Context is used internally
      * @param key Key used to identify the stored value in SecureStorage
-     * @param defaultValue Default int value that will be returned if the value with given key doesn't exist or
+     * @param defaultValue Default double value that will be returned if the value with given key doesn't exist or
      * an exception is thrown
      *
-     * @return Decrypted int value associated with given key from SecureStorage
+     * @return Decrypted double value associated with given key from SecureStorage
      *
      */
-    fun getInt(context: Context, key: String, defaultValue: Int): Int =
-        parseInt(getString(context.applicationContext, key, defaultValue.toString()))
+    fun getDouble(context: Context, key: String, defaultValue: Double): Double =
+        parseDouble(getString(context.applicationContext, key, defaultValue.toString()))
+
+    /**
+     *
+     * Gets encrypted float value for given key from the SecureStorage on the Android Device, decrypts it
+     * and returns it
+     *
+     * @param context Context is used internally
+     * @param key Key used to identify the stored value in SecureStorage
+     * @param defaultValue Default float value that will be returned if the value with given key doesn't exist or
+     * an exception is thrown
+     *
+     * @return Decrypted float value associated with given key from SecureStorage
+     *
+     */
+    fun getFloat(context: Context, key: String, defaultValue: Float): Float =
+        parseFloat(getString(context.applicationContext, key, defaultValue.toString()))
 
     /**
      *
