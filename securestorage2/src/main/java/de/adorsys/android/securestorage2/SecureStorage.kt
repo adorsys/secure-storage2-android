@@ -211,7 +211,7 @@ object SecureStorage {
      *
      */
     @Throws(SecureStorageException::class)
-    fun getString(context: Context, key: String, defaultValue: String): String {
+    fun getString(context: Context, key: String, defaultValue: String?): String? {
         checkAppCanUseLibrary()
 
         val encryptedValue = getSecureValue(context.applicationContext, key)
@@ -241,8 +241,14 @@ object SecureStorage {
      * @return Decrypted boolean value associated with given key from SecureStorage
      *
      */
-    fun getBoolean(context: Context, key: String, defaultValue: Boolean): Boolean =
-        parseBoolean(getString(context.applicationContext, key, defaultValue.toString()))
+    fun getBoolean(context: Context, key: String, defaultValue: Boolean?): Boolean =
+        parseBoolean(
+            getString(
+                context.applicationContext,
+                key,
+                defaultValue?.toString()
+            )
+        )
 
     /**
      *
@@ -256,8 +262,12 @@ object SecureStorage {
      * @return Decrypted int value associated with given key from SecureStorage
      *
      */
-    fun getInt(context: Context, key: String, defaultValue: Int): Int =
-        parseInt(getString(context.applicationContext, key, defaultValue.toString()))
+    fun getInt(context: Context, key: String, defaultValue: Int?): Int =
+        parseInt(getString(
+            context.applicationContext,
+            key,
+            defaultValue?.toString()
+        ))
 
     /**
      *
@@ -271,8 +281,12 @@ object SecureStorage {
      * @return Decrypted long value associated with given key from SecureStorage
      *
      */
-    fun getLong(context: Context, key: String, defaultValue: Long): Long =
-        parseLong(getString(context.applicationContext, key, defaultValue.toString()))
+    fun getLong(context: Context, key: String, defaultValue: Long?): Long =
+        parseLong(getString(
+            context.applicationContext,
+            key,
+            defaultValue?.toString()
+        ))
 
     /**
      *
@@ -287,8 +301,12 @@ object SecureStorage {
      * @return Decrypted double value associated with given key from SecureStorage
      *
      */
-    fun getDouble(context: Context, key: String, defaultValue: Double): Double =
-        parseDouble(getString(context.applicationContext, key, defaultValue.toString()))
+    fun getDouble(context: Context, key: String, defaultValue: Double?): Double =
+        parseDouble(getString(
+            context.applicationContext,
+            key,
+            defaultValue?.toString()
+        ))
 
     /**
      *
@@ -303,8 +321,12 @@ object SecureStorage {
      * @return Decrypted float value associated with given key from SecureStorage
      *
      */
-    fun getFloat(context: Context, key: String, defaultValue: Float): Float =
-        parseFloat(getString(context.applicationContext, key, defaultValue.toString()))
+    fun getFloat(context: Context, key: String, defaultValue: Float?): Float =
+        parseFloat(getString(
+            context.applicationContext,
+            key,
+            defaultValue?.toString()
+        ))
 
     /**
      *
