@@ -343,7 +343,7 @@ object SecureStorage {
         if (KeyStoreTool.keyExists(context.applicationContext)) {
             KeyStoreTool.deleteKey(context.applicationContext)
         }
-        clearAllSecureValues(context.applicationContext)
+        clearAllValues(context.applicationContext)
     }
 
     /**
