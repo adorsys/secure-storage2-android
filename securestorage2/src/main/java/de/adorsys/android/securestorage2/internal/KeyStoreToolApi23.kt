@@ -28,7 +28,7 @@ import android.util.Base64
 import de.adorsys.android.securestorage2.SecureStorage
 import de.adorsys.android.securestorage2.SecureStorageException
 import java.security.spec.InvalidKeySpecException
-import java.util.*
+import java.util.GregorianCalendar
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
@@ -61,15 +61,15 @@ internal object KeyStoreToolApi23 {
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    fun generateKey(): SecretKey {
+    fun generateKey() {
         val keyGenerator = getKeyGenerator()
 
-        val keyStartDate = Calendar.getInstance()
-        keyStartDate.add(Calendar.DAY_OF_MONTH, -1)
+        val keyStartDate = GregorianCalendar.getInstance()
+        keyStartDate.add(GregorianCalendar.DAY_OF_MONTH, -1)
 
         val keyGenParameterSpecBuilder =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                KeyGenParameterSpec.Builder(
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.P -> KeyGenParameterSpec.Builder(
                     SecureStorage.ENCRYPTION_KEY_ALIAS,
                     KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
                 )
@@ -78,9 +78,7 @@ internal object KeyStoreToolApi23 {
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
                     .setKeySize(AES_KEY_BIT_SIZE)
                     .setIsStrongBoxBacked(SecureStorage.EXPLICITLY_USE_SECURE_HARDWARE)
-                    .setUserConfirmationRequired(SecureStorage.EXPLICITLY_USE_SECURE_HARDWARE)
-            } else {
-                KeyGenParameterSpec.Builder(
+                else -> KeyGenParameterSpec.Builder(
                     SecureStorage.ENCRYPTION_KEY_ALIAS,
                     KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
                 )
@@ -91,7 +89,7 @@ internal object KeyStoreToolApi23 {
             }
 
         keyGenerator.init(keyGenParameterSpecBuilder.build())
-        return keyGenerator.generateKey()
+        keyGenerator.generateKey()
     }
 
 

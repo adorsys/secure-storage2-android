@@ -37,7 +37,7 @@ import java.security.KeyPairGenerator
 import java.security.KeyPair
 import java.security.PrivateKey
 import java.security.PublicKey
-import java.util.Calendar
+import java.util.GregorianCalendar
 
 internal object KeyStoreToolApi21 {
 
@@ -143,10 +143,10 @@ internal object KeyStoreToolApi21 {
 
     private fun generateRsaKey(context: Context): KeyPair? {
         val keyPairGenerator = getKeyPairGenerator()
-        val keyStartDate = Calendar.getInstance()
-        keyStartDate.add(Calendar.DAY_OF_MONTH, -1)
-        val keyEndDate = Calendar.getInstance()
-        keyEndDate.add(Calendar.YEAR, RSA_KEY_PAIR_VALIDITY_IN_YEARS)
+        val keyStartDate = GregorianCalendar.getInstance()
+        keyStartDate.add(GregorianCalendar.DAY_OF_MONTH, -1)
+        val keyEndDate = GregorianCalendar.getInstance()
+        keyEndDate.add(GregorianCalendar.YEAR, RSA_KEY_PAIR_VALIDITY_IN_YEARS)
 
         val keyPairGeneratorSpecBuilder = KeyPairGeneratorSpec.Builder(context)
             .setAlias(SecureStorage.ENCRYPTION_KEY_ALIAS)
