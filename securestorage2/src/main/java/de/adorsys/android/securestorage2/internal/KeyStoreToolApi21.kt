@@ -68,8 +68,8 @@ internal object KeyStoreToolApi21 {
         SecureStorage.getSharedPreferencesInstance(context).edit().clear().execute()
 
         // Delete Asymmetric KeyPair from Keystore
-        if (rsaKeyPairExists(keyStoreInstance)) {
-            try {
+        when {
+            rsaKeyPairExists(keyStoreInstance) -> try {
                 keyStoreInstance.deleteEntry(SecureStorage.ENCRYPTION_KEY_ALIAS)
             } catch (e: KeyStoreException) {
                 throw SecureStorageException(
@@ -79,8 +79,7 @@ internal object KeyStoreToolApi21 {
                     SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
                 )
             }
-        } else {
-            throw SecureStorageException(
+            else -> throw SecureStorageException(
                 SecureStorageException.MESSAGE_KEYPAIR_DOES_NOT_EXIST,
                 null,
                 SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
@@ -95,13 +94,14 @@ internal object KeyStoreToolApi21 {
         key: String,
         value: String
     ): String {
-        return if (keyExists(keyStoreInstance)) {
-            generateAesKey(context, keyStoreInstance, cipher, key)
+        return when {
+            keyExists(keyStoreInstance) -> {
+                generateAesKey(context, keyStoreInstance, cipher, key)
 
-            val aesKey = getAesKey(context, keyStoreInstance, cipher, key)
-            AesCbcWithIntegrity.encrypt(value, aesKey).toString()
-        } else {
-            throw SecureStorageException(
+                val aesKey = getAesKey(context, keyStoreInstance, cipher, key)
+                AesCbcWithIntegrity.encrypt(value, aesKey).toString()
+            }
+            else -> throw SecureStorageException(
                 SecureStorageException.MESSAGE_KEYPAIR_DOES_NOT_EXIST,
                 null,
                 SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
@@ -215,19 +215,19 @@ internal object KeyStoreToolApi21 {
 
         cipher.init(Cipher.DECRYPT_MODE, privateKey)
 
-        val encodedKey = SecureStorage.getSharedPreferencesInstance(context).getString(keyValueKey, null)
-
-        if (encodedKey == null) {
-            throw SecureStorageException(
+        return when (val encodedKey =
+            SecureStorage.getSharedPreferencesInstance(context).getString(keyValueKey, null)) {
+            null -> throw SecureStorageException(
                 SecureStorageException.MESSAGE_KEY_DOES_NOT_EXIST,
                 null,
                 SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
             )
-        } else {
-            val decodedKey = Base64.decode(encodedKey, Base64.DEFAULT)
+            else -> {
+                val decodedKey = Base64.decode(encodedKey, Base64.DEFAULT)
 
-            val decryptedKey = cipher.doFinal(decodedKey)
-            return String(decryptedKey)
+                val decryptedKey = cipher.doFinal(decodedKey)
+                String(decryptedKey)
+            }
         }
     }
 

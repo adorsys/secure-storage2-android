@@ -102,10 +102,9 @@ internal object KeyStoreToolApi23 {
         value: String
     ): String {
 
-        val secretKey = if (keyExists(keyStoreInstance)) {
-            getSecretKey(keyStoreInstance)
-        } else {
-            throw SecureStorageException(
+        val secretKey = when {
+            keyExists(keyStoreInstance) -> getSecretKey(keyStoreInstance)
+            else -> throw SecureStorageException(
                 SecureStorageException.MESSAGE_KEY_DOES_NOT_EXIST,
                 null,
                 SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
@@ -145,8 +144,8 @@ internal object KeyStoreToolApi23 {
     @RequiresApi(Build.VERSION_CODES.M)
     internal fun deleteKey(keyStoreInstance: KeyStore) {
         // Delete Key from Keystore
-        if (keyExists(keyStoreInstance)) {
-            try {
+        when {
+            keyExists(keyStoreInstance) -> try {
                 keyStoreInstance.deleteEntry(SecureStorage.ENCRYPTION_KEY_ALIAS)
             } catch (e: KeyStoreException) {
                 throw SecureStorageException(
@@ -156,8 +155,7 @@ internal object KeyStoreToolApi23 {
                     SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION
                 )
             }
-        } else {
-            throw SecureStorageException(
+            else -> throw SecureStorageException(
                 SecureStorageException.MESSAGE_KEY_DOES_NOT_EXIST,
                 null,
                 SecureStorageException.ExceptionType.KEYSTORE_EXCEPTION

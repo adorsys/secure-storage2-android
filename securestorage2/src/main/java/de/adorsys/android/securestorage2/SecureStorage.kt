@@ -81,8 +81,8 @@ object SecureStorage {
 
         KeyStoreTool.setInstallApiVersionFlag(context.applicationContext)
 
-        if (!KeyStoreTool.keyExists(context.applicationContext)) {
-            KeyStoreTool.generateKey(context.applicationContext)
+        when {
+            !KeyStoreTool.keyExists(context.applicationContext) -> KeyStoreTool.generateKey(context.applicationContext)
         }
     }
 
@@ -216,16 +216,17 @@ object SecureStorage {
 
         val encryptedValue = getSecureValue(context.applicationContext, key)
 
-        if (encryptedValue.isNullOrBlank()) {
-            return defaultValue
-        }
-
-        val decryptedValue = KeyStoreTool.decryptValue(context.applicationContext, key, encryptedValue)
-
         return when {
-            decryptedValue.isNullOrBlank() -> defaultValue
-            else -> decryptedValue
+            encryptedValue.isNullOrBlank() -> defaultValue
+            else -> {
+                val decryptedValue = KeyStoreTool.decryptValue(context.applicationContext, key, encryptedValue)
+                when {
+                    decryptedValue.isNullOrBlank() -> defaultValue
+                    else -> decryptedValue
+                }
+            }
         }
+
     }
 
     /**
@@ -268,10 +269,9 @@ object SecureStorage {
             key,
             defaultValue?.toString()
         )
-        return if (retrievedValue.isNullOrBlank()) {
-            defaultValue
-        } else {
-            parseInt(retrievedValue)
+        return when {
+            retrievedValue.isNullOrBlank() -> defaultValue
+            else -> parseInt(retrievedValue)
         }
     }
 
@@ -293,10 +293,9 @@ object SecureStorage {
             key,
             defaultValue?.toString()
         )
-        return if (retrievedValue.isNullOrBlank()) {
-            defaultValue
-        } else {
-            parseLong(retrievedValue)
+        return when {
+            retrievedValue.isNullOrBlank() -> defaultValue
+            else -> parseLong(retrievedValue)
         }
     }
 
@@ -319,10 +318,9 @@ object SecureStorage {
             key,
             defaultValue?.toString()
         )
-        return if (retrievedValue.isNullOrBlank()) {
-            defaultValue
-        } else {
-            parseDouble(retrievedValue)
+        return when {
+            retrievedValue.isNullOrBlank() -> defaultValue
+            else -> parseDouble(retrievedValue)
         }
     }
 
@@ -345,10 +343,9 @@ object SecureStorage {
             key,
             defaultValue?.toString()
         )
-        return if (retrievedValue.isNullOrBlank()) {
-            defaultValue
-        } else {
-            parseFloat(retrievedValue)
+        return when {
+            retrievedValue.isNullOrBlank() -> defaultValue
+            else -> parseFloat(retrievedValue)
         }
     }
 
@@ -399,8 +396,8 @@ object SecureStorage {
 
         clearAllSecureValues(context.applicationContext)
 
-        if (apiVersionUnderMExisted) {
-            KeyStoreTool.setInstallApiVersionFlag(context.applicationContext, true)
+        when {
+            apiVersionUnderMExisted -> KeyStoreTool.setInstallApiVersionFlag(context.applicationContext, true)
         }
     }
 
@@ -416,8 +413,8 @@ object SecureStorage {
     fun clearAllValuesAndDeleteKeys(context: Context) {
         checkAppCanUseLibrary()
 
-        if (KeyStoreTool.keyExists(context.applicationContext)) {
-            KeyStoreTool.deleteKey(context.applicationContext)
+        when {
+            KeyStoreTool.keyExists(context.applicationContext) -> KeyStoreTool.deleteKey(context.applicationContext)
         }
         clearAllValues(context.applicationContext)
     }
@@ -482,8 +479,8 @@ object SecureStorage {
 
     @Throws(SecureStorageException::class)
     private fun checkAppCanUseLibrary() {
-        if (!CAN_USE_LIBRARY) {
-            throw SecureStorageException(
+        when {
+            !CAN_USE_LIBRARY -> throw SecureStorageException(
                 "Cannot use SecureStorage2 on this device because it does not have hardware support.",
                 null,
                 SecureStorageException.ExceptionType.KEYSTORE_NOT_SUPPORTED_EXCEPTION

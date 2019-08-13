@@ -266,13 +266,12 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
     private fun assertInstallationFlag(context: Context, shouldExist: Boolean) {
         val INSTALLATION_FLAG_KEY = "INSTALLATION_API_VERSION_UNDER_M"
         // INSTALLATION_FLAG is set only on API 21 & 22
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            if (shouldExist) {
-                // Check if INSTALLATION_FLAG exists in SecureStorage
-                Assert.assertTrue(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
-            } else {
-                // Check if INSTALLATION_FLAG exists in SecureStorage
-                Assert.assertFalse(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+        when {
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.M -> when {
+                shouldExist -> // Check if INSTALLATION_FLAG exists in SecureStorage
+                    Assert.assertTrue(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
+                else -> // Check if INSTALLATION_FLAG exists in SecureStorage
+                    Assert.assertFalse(SecureStorage.contains(context, INSTALLATION_FLAG_KEY))
             }
         }
     }

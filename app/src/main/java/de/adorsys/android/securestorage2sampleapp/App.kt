@@ -24,8 +24,8 @@ class App : Application() {
         )
 
         // In Espresso tests we initialize the SecureStorageKeys in the test class
-        if (!isRunningTest) {
-            SecureStorage.initSecureStorageKeys(applicationContext)
+        when {
+            !isRunningTest -> SecureStorage.initSecureStorageKeys(applicationContext)
         }
     }
 }
