@@ -262,12 +262,18 @@ object SecureStorage {
      * @return Decrypted int value associated with given key from SecureStorage
      *
      */
-    fun getInt(context: Context, key: String, defaultValue: Int?): Int =
-        parseInt(getString(
+    fun getInt(context: Context, key: String, defaultValue: Int?): Int? {
+        val retrievedValue = getString(
             context.applicationContext,
             key,
             defaultValue?.toString()
-        ))
+        )
+        return if (retrievedValue.isNullOrBlank()) {
+            defaultValue
+        } else {
+            parseInt(retrievedValue)
+        }
+    }
 
     /**
      *
@@ -281,12 +287,18 @@ object SecureStorage {
      * @return Decrypted long value associated with given key from SecureStorage
      *
      */
-    fun getLong(context: Context, key: String, defaultValue: Long?): Long =
-        parseLong(getString(
+    fun getLong(context: Context, key: String, defaultValue: Long?): Long? {
+        val retrievedValue = getString(
             context.applicationContext,
             key,
             defaultValue?.toString()
-        ))
+        )
+        return if (retrievedValue.isNullOrBlank()) {
+            defaultValue
+        } else {
+            parseLong(retrievedValue)
+        }
+    }
 
     /**
      *
@@ -301,12 +313,18 @@ object SecureStorage {
      * @return Decrypted double value associated with given key from SecureStorage
      *
      */
-    fun getDouble(context: Context, key: String, defaultValue: Double?): Double =
-        parseDouble(getString(
+    fun getDouble(context: Context, key: String, defaultValue: Double?): Double? {
+        val retrievedValue = getString(
             context.applicationContext,
             key,
             defaultValue?.toString()
-        ))
+        )
+        return if (retrievedValue.isNullOrBlank()) {
+            defaultValue
+        } else {
+            parseDouble(retrievedValue)
+        }
+    }
 
     /**
      *
@@ -321,12 +339,18 @@ object SecureStorage {
      * @return Decrypted float value associated with given key from SecureStorage
      *
      */
-    fun getFloat(context: Context, key: String, defaultValue: Float?): Float =
-        parseFloat(getString(
+    fun getFloat(context: Context, key: String, defaultValue: Float?): Float? {
+        val retrievedValue = getString(
             context.applicationContext,
             key,
             defaultValue?.toString()
-        ))
+        )
+        return if (retrievedValue.isNullOrBlank()) {
+            defaultValue
+        } else {
+            parseFloat(retrievedValue)
+        }
+    }
 
     /**
      *
