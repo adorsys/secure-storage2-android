@@ -21,7 +21,11 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
     @Test
     fun testStoreRetrieveAndRemoveStringValue() {
         val KEY_STRING = "KEY_STRING"
-        val VALUE_STRING = "VALUE_STRING"
+        val VALUE_STRING = "The wheels on the bus go, Round and round, Round and round, Round and round." +
+                " The wheels on the bus go Round and round, All through the town. The doors on the bus go," +
+                " Open and shut, Open and shut, Open and shut. The doors on the bus go Open and shut," +
+                " All through the town. The Driver on the bus says, \"Move on back! Move on back! Move on back!\"" +
+                " The Driver on the bus says, \"Move on back!\" All through the town."
         val context = activityRule.activity.applicationContext
 
         // Simply generate keys
@@ -203,7 +207,8 @@ open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
         Assert.assertNotNull(retrievedValue)
 
         // Check if the retrievedValue equals the pre-stored value
-        Assert.assertEquals(VALUE_DOUBLE, retrievedValue, 0.0)
+        // If test arrived here then retrievedValue cannot be null
+        Assert.assertEquals(VALUE_DOUBLE, retrievedValue!!, 0.0)
 
         // Remove the Double value from SecureStorage
         SecureStorage.remove(context, KEY_DOUBLE)
