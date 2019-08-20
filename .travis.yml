@@ -38,7 +38,7 @@ matrix:
     - env: API=28
       before_script: skip
       script:
-        - bash .buildscript/build-and-deploy-snapshot.sh
+        - bash .buildscripts/build-and-deploy-snapshot.sh
       stage: deploy
 
 android:
@@ -77,11 +77,11 @@ before_script:
   - echo y | sdkmanager "system-images;android-$API;$EMU_FLAVOR;$ABI" >/dev/null # install our emulator
   - echo no | avdmanager create avd --force -n test -k "system-images;android-$API;$EMU_FLAVOR;$ABI" -c 10M
   - emulator -verbose -avd test -no-accel -no-snapshot -no-window $AUDIO -camera-back none -camera-front none -selinux permissive -qemu -m 2048 &
-  - ./.buildscript/android-wait-for-emulator.sh
+  - ./.buildscripts/android-wait-for-emulator.sh
   - adb shell settings put global window_animation_scale 0 &
   - adb shell settings put global transition_animation_scale 0 &
   - adb shell settings put global animator_duration_scale 0 &
   - adb shell input keyevent 82 &
 
 # Called in test stages
-script: bash .buildscript/run-android-tests.sh
+script: bash .buildscripts/run-android-tests.sh
