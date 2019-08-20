@@ -18,14 +18,16 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4ClassRunner::class)
 open class SecureStorage2LogicTest : SecureStorage2BaseTest() {
 
+    // "\uD83D\uDE8C" = 🚌
     @Test
     fun testStoreRetrieveAndRemoveStringValue() {
         val KEY_STRING = "KEY_STRING"
-        val VALUE_STRING = "The wheels on the bus go, Round and round, Round and round, Round and round." +
-                " The wheels on the bus go Round and round, All through the town. The doors on the bus go," +
-                " Open and shut, Open and shut, Open and shut. The doors on the bus go Open and shut," +
-                " All through the town. The Driver on the bus says, \"Move on back! Move on back! Move on back!\"" +
-                " The Driver on the bus says, \"Move on back!\" All through the town."
+        val VALUE_STRING = "The wheels on the \uD83D\uDE8C go, Round and round, Round and round, Round and round." +
+                " The wheels on the \uD83D\uDE8C go Round and round," +
+                " All through the town. The doors on the \uD83D\uDE8C go," +
+                " Open and shut ♫, Open and shut ♫, Open and shut. The doors on the \uD83D\uDE8C go Open and shut," +
+                " All through the town. The Driver on the \uD83D\uDE8C says, \"Move on back! Move on back! Move on back!\"" +
+                " The Driver on the \uD83D\uDE8C says, \"Move on back!\" All through the town."
         val context = activityRule.activity.applicationContext
 
         // Simply generate keys
