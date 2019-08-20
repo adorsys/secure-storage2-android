@@ -6,7 +6,7 @@ echo -e "\033[0;32m ./gradlew :securestorage2:clean \033[0m"
 echo -e "\033[0;32m ./gradlew :securestorage2:install \033[0m"
 ./gradlew :securestorage2:install
 
-if [ "$TRAVIS_BRANCH" == "master" ]; then
+if [ "$CI" == true ] && [ "$TRAVIS_PULL_REQUEST" == false ] && [ "$TRAVIS_BRANCH" == "master" ]; then
 
     echo -e "\033[0;32m ./gradlew :securestorage2:bintrayUpload \033[0m"
     ./gradlew :securestorage2:bintrayUpload
